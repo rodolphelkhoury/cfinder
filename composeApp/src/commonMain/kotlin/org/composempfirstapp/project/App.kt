@@ -16,6 +16,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.compose_multiplatform
+import org.composempfirstapp.project.court.presentation.HomeScreen
 import org.composempfirstapp.project.theme.CFinderTheme
 import org.composempfirstapp.project.utils.Theme
 
@@ -26,12 +27,6 @@ fun App() {
         appTheme = Theme.DARK_MODE.name,
         darkTheme = true
     ) {
-        Column(Modifier.fillMaxWidth().background(MaterialTheme.colors.onSurface), horizontalAlignment = Alignment.CenterHorizontally) {
-            val greeting = remember { Greeting().greet() }
-            Column(Modifier.fillMaxWidth().background(MaterialTheme.colors.onSurface), horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(painterResource(Res.drawable.compose_multiplatform), null)
-                Text("Compose: $greeting")
-            }
-        }
+        HomeScreen()
     }
 }
