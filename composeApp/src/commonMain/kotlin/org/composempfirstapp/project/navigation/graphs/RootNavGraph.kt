@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.composempfirstapp.project.court.presentation.MainScreen
 import org.composempfirstapp.project.navigation.Graph
+import org.composempfirstapp.project.navigation.SettingRouteScreen
+import org.composempfirstapp.project.profile.presentation.SettingScreen
 
 @Composable
 fun RootNavGraph(modifier: Modifier = Modifier) {
@@ -16,10 +18,17 @@ fun RootNavGraph(modifier: Modifier = Modifier) {
         route = Graph.RootScreenGraph,
         startDestination = Graph.MainScreenGraph
     ) {
+
         composable(
             route = Graph.MainScreenGraph
         ) {
             MainScreen(rootNavController)
+        }
+
+        composable(
+            route = SettingRouteScreen.Setting.route
+        ) {
+            SettingScreen(rootNavController)
         }
     }
 }

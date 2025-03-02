@@ -1,25 +1,32 @@
 package org.composempfirstapp.project.profile.presentation
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import org.composempfirstapp.project.navigation.SettingRouteScreen
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(
+    rootNavController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = Modifier,
     ) {
-//        Text(
-//            text = "Profile",
-//            fontSize = 32.sp,
-//            modifier = Modifier.align(Alignment.Center),
-//            fontWeight = FontWeight.Bold,
-//            color = MaterialTheme.colorScheme.onBackground
-//        )
+        IconButton(
+            onClick = {
+                rootNavController.navigate(SettingRouteScreen.Setting.route)
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Settings,
+                contentDescription = "App settings"
+            )
+        }
     }
 }

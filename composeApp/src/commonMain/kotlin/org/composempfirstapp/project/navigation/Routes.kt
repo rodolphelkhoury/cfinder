@@ -11,3 +11,7 @@ sealed class MainRouteScreen (var route : String) {
     object Booking : MainRouteScreen("booking")
     object Profile : MainRouteScreen("profile")
 }
+
+sealed class SettingRouteScreen (var route : String) {
+    object Setting : SettingRouteScreen("settings")
+}
