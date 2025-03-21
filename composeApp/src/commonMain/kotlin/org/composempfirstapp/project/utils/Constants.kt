@@ -1,5 +1,9 @@
 package org.composempfirstapp.project.utils
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.booking
 import cfinder.composeapp.generated.resources.dark_mode
@@ -64,3 +68,11 @@ val courtsResponse = CourtsResponse(
     "dwe",
     10
 )
+
+val FadeIn = fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+        scaleIn(
+            initialScale = 0.92f,
+            animationSpec = tween(220, delayMillis = 90)
+        )
+
+val FadeOut = fadeOut(animationSpec = tween(90))

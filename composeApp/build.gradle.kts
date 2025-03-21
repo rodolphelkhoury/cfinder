@@ -49,7 +49,11 @@ kotlin {
 
             implementation(compose.material3)
 
+            // navigation
             implementation(libs.navigation.compose)
+
+            // ViewModel
+            implementation(libs.androidx.lifecycle.viewmodel)
 
             //Coil
             implementation(libs.coil.compose.core)

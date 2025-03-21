@@ -9,4 +9,10 @@
     <string name="profile">Profile</string>
     <string name="settings">App settings</string>
     <string name="search">Search</string>
+    <string name="theme">Theme</string>
+    <string name="logout">Logout</string>
+    <string name="logout_description">Are you sure you want to logout?</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_a_theme">Choose a theme</string>
+    <string name="apply">Apply</string>
 </resources>

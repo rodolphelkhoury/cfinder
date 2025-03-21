@@ -10,8 +10,8 @@ import org.composempfirstapp.project.utils.Theme
 @Preview
 fun App() {
     CFinderTheme(
-        appTheme = Theme.DARK_MODE.name,
-        darkTheme = true
+        appTheme = Theme.LIGHT_MODE.name,
+        darkTheme = false
     ) {
         RootNavGraph()
     }
