@@ -40,7 +40,7 @@ fun RootNavGraph(modifier: Modifier = Modifier) {
             CourtDetailScreen(
                 rootNavController,
                 // for now static
-                courts[9]
+                courts[0]
             )
         }
     }

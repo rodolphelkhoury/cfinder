@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import cfinder.composeapp.generated.resources.Res
@@ -34,6 +35,7 @@ import cfinder.composeapp.generated.resources.logo
 import cfinder.composeapp.generated.resources.settings
 import coil3.compose.AsyncImage
 import org.composempfirstapp.project.court.domain.Court
+import org.composempfirstapp.project.shareLink
 import org.composempfirstapp.project.theme.detailImageSize
 import org.composempfirstapp.project.theme.imageSize
 import org.composempfirstapp.project.theme.xLargePadding
@@ -46,6 +48,8 @@ fun CourtDetailScreen(
     navController: NavController,
     currentCourt: Court
 ) {
+    val uriHandler = LocalUriHandler.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -72,25 +76,31 @@ fun CourtDetailScreen(
                         }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-
+                    // TODO adjust it to be court url
+                    currentCourt.imageUrl?.let {
+                        IconButton(
+                            onClick = {
+                                shareLink(currentCourt.imageUrl)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Share,
+                                contentDescription = null
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Share,
-                            contentDescription = null
-                        )
                     }
-                    IconButton(
-                        onClick = {
-
+                    // TODO adjust it to be court url
+                    currentCourt.imageUrl?.let {
+                        IconButton(
+                            onClick = {
+                                uriHandler.openUri(currentCourt.imageUrl)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_browse),
+                                contentDescription = null
+                            )
                         }
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_browse),
-                            contentDescription = null
-                        )
                     }
                     IconButton(
                         onClick = {
