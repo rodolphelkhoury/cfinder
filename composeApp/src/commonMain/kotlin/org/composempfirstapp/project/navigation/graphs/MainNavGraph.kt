@@ -32,17 +32,17 @@ fun MainNavGraph(
         composable(
             route = MainRouteScreen.Home.route
         ) {
-            BookingHomeScreen()
+            BookingHomeScreen(rootNavController)
         }
         composable(
             route = MainRouteScreen.Offers.route
         ) {
-            OffersScreen()
+            OffersScreen(rootNavController)
         }
         composable(
             route = MainRouteScreen.Booking.route
         ) {
-            ReservationScreen()
+            ReservationScreen(rootNavController)
         }
         composable(
             route = MainRouteScreen.Profile.route

@@ -15,3 +15,7 @@ sealed class MainRouteScreen (var route : String) {
 sealed class SettingRouteScreen (var route : String) {
     object Setting : SettingRouteScreen("settings")
 }
+
+sealed class CourtRouteScreen (var route : String) {
+    object CourtDetail : CourtRouteScreen("courtDetail")
+}

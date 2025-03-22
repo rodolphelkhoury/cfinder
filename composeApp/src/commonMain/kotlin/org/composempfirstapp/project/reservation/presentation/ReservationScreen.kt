@@ -11,13 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import org.composempfirstapp.project.court.presentation.CourtListScreen
 import org.composempfirstapp.project.court.presentation.CourtViewModel
 import org.composempfirstapp.project.utils.EmptyContent
 import org.composempfirstapp.project.utils.ShimmerEffect
 
 @Composable
-fun ReservationScreen(modifier: Modifier = Modifier) {
+fun ReservationScreen(
+    navController: NavController
+) {
 
     val reservationViewModel = viewModel {
         ReservationViewModel()
@@ -39,7 +42,8 @@ fun ReservationScreen(modifier: Modifier = Modifier) {
             } else {
                 // TODO
                 CourtListScreen(
-                    courtList = courtList
+                    courtList = courtList,
+                    navController = navController
                 )
             }
         },

@@ -7,13 +7,16 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import org.composempfirstapp.project.court.domain.Court
+import org.composempfirstapp.project.navigation.CourtRouteScreen
 import org.composempfirstapp.project.theme.xLargePadding
 
 @Composable
 fun CourtListScreen(
     modifier: Modifier = Modifier,
-    courtList: List<Court>
+    courtList: List<Court>,
+    navController: NavController
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
@@ -32,6 +35,7 @@ fun CourtListScreen(
                 court = it,
                 onClick = {
 
+                    navController.navigate(CourtRouteScreen.CourtDetail.route)
                 }
             )
         }

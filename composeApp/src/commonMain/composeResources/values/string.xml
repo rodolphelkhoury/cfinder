@@ -15,4 +15,5 @@
     <string name="cancel">Cancel</string>
     <string name="choose_a_theme">Choose a theme</string>
     <string name="apply">Apply</string>
+    <string name="court_details">Court Details</string>
 </resources>

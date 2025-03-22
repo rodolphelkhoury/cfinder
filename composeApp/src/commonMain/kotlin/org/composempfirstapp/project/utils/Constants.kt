@@ -27,6 +27,8 @@ enum class Theme(val title: StringResource) {
     DARK_MODE(Res.string.dark_mode)
 }
 
+val apiKey = ""
+
 val bottomNavigationList = listOf(
     BottomNavigationItem(
         icon = Res.drawable.home,

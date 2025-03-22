@@ -6,12 +6,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import org.composempfirstapp.project.utils.EmptyContent
 import org.composempfirstapp.project.utils.ShimmerEffect
 import org.composempfirstapp.project.utils.courts
 
 @Composable
-fun BookingHomeScreen(modifier: Modifier = Modifier) {
+fun BookingHomeScreen(
+    navController: NavController
+) {
     Box(
         modifier = Modifier,
     ) {
@@ -33,7 +36,8 @@ fun BookingHomeScreen(modifier: Modifier = Modifier) {
 
                 } else {
                     CourtListScreen(
-                        courtList = courtList
+                        courtList = courtList,
+                        navController = navController
                     )
                 }
             },
