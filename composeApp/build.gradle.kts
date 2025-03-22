@@ -61,6 +61,9 @@ kotlin {
             implementation(libs.coil.mp)
             implementation(libs.coil.network.ktor3)
 
+            //dataStore for localstorage, good for authentication token
+            implementation(libs.androidx.data.store.core)
+
         }
     }
 }

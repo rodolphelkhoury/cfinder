@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +26,7 @@ import cfinder.composeapp.generated.resources.ic_light_mode
 import cfinder.composeapp.generated.resources.logout
 import cfinder.composeapp.generated.resources.settings
 import cfinder.composeapp.generated.resources.theme
+import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
 import org.composempfirstapp.project.profile.presentation.settings.components.LogoutDialog
 import org.composempfirstapp.project.profile.presentation.settings.components.SettingItem
 import org.composempfirstapp.project.profile.presentation.settings.components.ThemeSelectionDialog
@@ -36,8 +38,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingScreen(
     rootNavController: NavHostController,
+    settingViewModel: SettingViewModel,
     modifier: Modifier = Modifier
 ) {
+
+    val currentTheme by settingViewModel.currentTheme.collectAsState()
+
 
     var showSelectThemeDialog by remember {
         mutableStateOf(false)
@@ -62,11 +68,12 @@ fun SettingScreen(
         }
         showSelectThemeDialog -> {
             ThemeSelectionDialog(
-                currentTheme = Theme.LIGHT_MODE.name,
+                currentTheme = currentTheme ?: Theme.DARK_MODE.name,
                 onDismissRequest = {
                     showSelectThemeDialog = false
                 },
                 onThemeChange = {
+                    settingViewModel.changeTheme(it)
                     showSelectThemeDialog = false
                 }
             )

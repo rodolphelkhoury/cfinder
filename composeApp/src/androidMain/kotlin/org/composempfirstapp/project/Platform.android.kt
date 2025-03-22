@@ -3,6 +3,9 @@ package org.composempfirstapp.project
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import org.composempfirstapp.project.utils.datastoreFileName
 
 class AndroidPlatform : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
@@ -26,4 +29,12 @@ private var activityProvider: () -> Activity = {
 
 fun setActivityProvider(provider: () -> Activity) {
     activityProvider = provider
+}
+
+actual fun dataStorePreference(): DataStore<Preferences> {
+    return AppSettings.getDataStore(
+        producerPath = {
+            activityProvider.invoke().filesDir.resolve(datastoreFileName).absolutePath
+        }
+    )
 }

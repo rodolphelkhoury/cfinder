@@ -11,10 +11,13 @@ import org.composempfirstapp.project.navigation.CourtRouteScreen
 import org.composempfirstapp.project.navigation.Graph
 import org.composempfirstapp.project.navigation.SettingRouteScreen
 import org.composempfirstapp.project.profile.presentation.SettingScreen
+import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
 import org.composempfirstapp.project.utils.courts
 
 @Composable
-fun RootNavGraph(modifier: Modifier = Modifier) {
+fun RootNavGraph(
+    settingViewModel: SettingViewModel
+) {
     val rootNavController = rememberNavController()
     NavHost(
         navController = rootNavController,
@@ -31,7 +34,7 @@ fun RootNavGraph(modifier: Modifier = Modifier) {
         composable(
             route = SettingRouteScreen.Setting.route
         ) {
-            SettingScreen(rootNavController)
+            SettingScreen(rootNavController,settingViewModel)
         }
 
         composable(

@@ -21,6 +21,8 @@ import org.composempfirstapp.project.navigation.MainRouteScreen
 import org.jetbrains.compose.resources.StringResource
 import kotlin.random.Random
 
+const val datastoreFileName = "setting.preferences_pb"
+
 enum class Theme(val title: StringResource) {
     SYSTEM_DEFAULT(Res.string.system_default),
     LIGHT_MODE(Res.string.light_mode),
