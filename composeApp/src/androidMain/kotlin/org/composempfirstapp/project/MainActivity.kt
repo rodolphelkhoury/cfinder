@@ -10,6 +10,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setActivityProvider {
+            this
+        }
+
         setContent {
             App()
         }

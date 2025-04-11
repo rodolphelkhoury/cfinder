@@ -15,7 +15,24 @@ compose-multiplatform = "1.7.0"
 junit = "4.13.2"
 kotlin = "2.1.0"
 
+
+navigationCompose = "2.8.0-alpha10"
+
+coil3 = "3.0.0-rc02"
+
+coroutines = "1.9.0"
+
+ktor = "3.0.1"
+
+lifecycleViewmodel = "2.8.3"
+
+androidx-data-store = "1.1.1"
+
+
 [libraries]
+
+androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewmodel" }
+
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -26,8 +43,24 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+#androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
+#maybe this should be removed
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+
+androidx-data-store-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "androidx-data-store" }
+
+
+
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
+coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil3" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil3" }
+coil-mp = { module = "io.coil-kt.coil3:coil", version.ref = "coil3" }
+
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
