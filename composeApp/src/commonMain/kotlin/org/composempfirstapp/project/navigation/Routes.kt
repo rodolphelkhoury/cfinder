@@ -3,6 +3,7 @@ package org.composempfirstapp.project.navigation
 object Graph {
     const val RootScreenGraph = "rootScreenGraph"
     const val MainScreenGraph = "mainScreenGraph"
+    const val AuthScreenGraph = "authScreenGraph"
 }
 
 sealed class MainRouteScreen (var route : String) {
@@ -18,4 +19,10 @@ sealed class SettingRouteScreen (var route : String) {
 
 sealed class CourtRouteScreen (var route : String) {
     object CourtDetail : CourtRouteScreen("courtDetail")
+}
+
+sealed class AuthRouteScreen(val route: String) {
+    object Login : AuthRouteScreen("login")
+    object VerifyPhoneNumber : AuthRouteScreen("verifyPhoneNumber")
+    object Register : AuthRouteScreen("register")
 }

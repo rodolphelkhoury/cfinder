@@ -21,7 +21,6 @@ fun MainNavGraph(
     rootNavController: NavHostController,
     homeNavHostController: NavHostController,
     paddingValues: PaddingValues,
-    modifier: Modifier = Modifier
 ) {
     NavHost(
         modifier = Modifier.fillMaxSize().padding(paddingValues),
