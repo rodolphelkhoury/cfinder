@@ -2,12 +2,13 @@ package org.composempfirstapp.project.court.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.composempfirstapp.project.court.domain.Court
 
 @Serializable
-data class CourtsResponse(
-    @SerialName("courts")
-    val courts: List<Court>,
+data class ErrorResponse(
+    @SerialName("code")
+    val code: String,
+    @SerialName("message")
+    val message: String,
     @SerialName("status")
-    val status: String,
+    val status: String
 )

@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinx.serialization)
+
 }
 
 kotlin {
@@ -64,6 +66,20 @@ kotlin {
             //dataStore for localstorage, good for authentication token
             implementation(libs.androidx.data.store.core)
 
+            // Ktor
+            implementation(libs.ktor.core)
+            implementation(libs.ktor.json)
+            implementation(libs.ktor.logging)
+            implementation(libs.ktor.negotiation)
+            implementation(libs.kotlinx.serialization.json)
+
+            //Kermit  for logging
+            implementation(libs.kermit)
+        }
+        iosMain.dependencies {
+
+            // Ktor
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
