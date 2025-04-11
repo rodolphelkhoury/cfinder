@@ -25,7 +25,7 @@ class ReservationViewModel : ViewModel() {
         getReservations()
     }
 
-    private fun getReservations() {
+    fun getReservations() {
         viewModelScope.launch(Dispatchers.IO) {
 //            _courtStateFlow.emit(Resource.Loading)
 //            // TODO

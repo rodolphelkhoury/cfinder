@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.composempfirstapp.project.court.domain.Court
 import org.composempfirstapp.project.navigation.CourtRouteScreen
 import org.composempfirstapp.project.theme.xLargePadding
@@ -34,7 +36,10 @@ fun CourtListScreen(
             CourtComponent(
                 court = it,
                 onClick = {
-
+                    val court = Json.encodeToString(it)
+                    navController.currentBackStackEntry?.savedStateHandle?.apply {
+                        set("court", court)
+                    }
                     navController.navigate(CourtRouteScreen.CourtDetail.route)
                 }
             )

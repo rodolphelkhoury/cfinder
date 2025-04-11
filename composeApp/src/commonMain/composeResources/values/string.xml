@@ -16,4 +16,7 @@
     <string name="choose_a_theme">Choose a theme</string>
     <string name="apply">Apply</string>
     <string name="court_details">Court Details</string>
+    <string name="retry">Retry</string>
+    <string name="no_courts">No Courts Available</string>
+    <string name="type_to_search">Type To Search</string>
 </resources>

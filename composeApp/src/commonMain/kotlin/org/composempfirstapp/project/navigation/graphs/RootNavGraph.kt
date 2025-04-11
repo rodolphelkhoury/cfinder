@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import kotlinx.serialization.json.Json
 import org.composempfirstapp.project.court.presentation.CourtDetailScreen
 import org.composempfirstapp.project.court.presentation.MainScreen
 import org.composempfirstapp.project.navigation.CourtRouteScreen
@@ -40,11 +41,13 @@ fun RootNavGraph(
         composable(
             route = CourtRouteScreen.CourtDetail.route
         ) {
-            CourtDetailScreen(
-                rootNavController,
-                // for now static
-                courts[0]
-            )
+            rootNavController.previousBackStackEntry?.savedStateHandle?.get<String>("court")?.let {
+                CourtDetailScreen(
+                    rootNavController,
+                    Json.decodeFromString(it)
+                )
+            }
+
         }
     }
 }

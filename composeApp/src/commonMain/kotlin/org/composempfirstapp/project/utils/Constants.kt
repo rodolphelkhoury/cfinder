@@ -19,9 +19,9 @@ import org.composempfirstapp.project.court.domain.Court
 import org.composempfirstapp.project.navigation.BottomNavigationItem
 import org.composempfirstapp.project.navigation.MainRouteScreen
 import org.jetbrains.compose.resources.StringResource
-import kotlin.random.Random
 
 const val datastoreFileName = "setting.preferences_pb"
+const val BASE_URL = "https://peyq1nnfap.sharedwithexpose.com/api/"
 
 enum class Theme(val title: StringResource) {
     SYSTEM_DEFAULT(Res.string.system_default),
@@ -70,7 +70,6 @@ val courts: List<Court> = listOf(
 val courtsResponse = CourtsResponse(
     courts,
     "dwe",
-    10
 )
 
 val FadeIn = fadeIn(animationSpec = tween(220, delayMillis = 90)) +
@@ -80,3 +79,4 @@ val FadeIn = fadeIn(animationSpec = tween(220, delayMillis = 90)) +
         )
 
 val FadeOut = fadeOut(animationSpec = tween(90))
+

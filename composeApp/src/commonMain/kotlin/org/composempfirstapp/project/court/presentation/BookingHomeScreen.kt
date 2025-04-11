@@ -7,9 +7,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import cfinder.composeapp.generated.resources.Res
+import cfinder.composeapp.generated.resources.ic_network_error
+import cfinder.composeapp.generated.resources.ic_browse
+import cfinder.composeapp.generated.resources.no_courts
+import org.composempfirstapp.project.court.data.CourtRepository
 import org.composempfirstapp.project.utils.EmptyContent
 import org.composempfirstapp.project.utils.ShimmerEffect
-import org.composempfirstapp.project.utils.courts
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BookingHomeScreen(
@@ -19,7 +24,7 @@ fun BookingHomeScreen(
         modifier = Modifier,
     ) {
         val courtViewModel = viewModel {
-            CourtViewModel()
+            CourtViewModel(CourtRepository())
         }
 
         val uiState by courtViewModel.courtStateFlow.collectAsState()
@@ -32,7 +37,13 @@ fun BookingHomeScreen(
             },
             onSuccess = { courtList ->
                 if (courtList.isEmpty()) {
-                    EmptyContent("No courts")
+                    EmptyContent(
+                        message = stringResource(Res.string.no_courts),
+                        icon = Res.drawable.ic_network_error,
+                        onRetryClick = {
+                            courtViewModel.getCourts()
+                        }
+                    )
 
                 } else {
                     CourtListScreen(
@@ -42,7 +53,13 @@ fun BookingHomeScreen(
                 }
             },
             onError = {
-                EmptyContent(it)
+                EmptyContent(
+                    message = it,
+                    icon = Res.drawable.ic_browse,
+                    onRetryClick = {
+                        courtViewModel.getCourts()
+                    }
+                )
             }
         )
     }
