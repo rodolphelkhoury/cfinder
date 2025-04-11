@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,7 +28,12 @@ fun LoginScreen(
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
-            onLoginSuccess()
+            val isVerified = viewModel.isPhoneVerified.value
+            if (isVerified) {
+                onLoginSuccess()
+            } else {
+                onNavigateToVerification(phoneNumber)
+            }
             viewModel.resetAuthState()
         }
     }

@@ -14,32 +14,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 
 @Composable
 fun RegisterScreen(
     onNavigateToLogin: () -> Unit,
-    onRegistrationSuccess: (String) -> Unit
+    onRegistrationSuccess: (String) -> Unit,
+    viewModel: AuthViewModel
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
-    var triggerRegister by remember { mutableStateOf(false) }
 
-    if (triggerRegister) {
-        LaunchedEffect(Unit) {
-            delay(1500)
-            isLoading = false
-            if (name.isNotBlank() && email.isNotBlank() &&
-                phoneNumber.isNotBlank() && password.isNotBlank() &&
-                password == confirmPassword
-            ) {
-                onRegistrationSuccess(phoneNumber)
+    val authState by viewModel.authState.collectAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            val customer = viewModel.customer.value
+            if (customer != null) {
+                onRegistrationSuccess(customer.phoneNumber)
             }
-            triggerRegister = false
+            viewModel.resetAuthState()
         }
     }
 
@@ -127,21 +123,32 @@ fun RegisterScreen(
                 )
             }
 
+            if (authState is AuthState.Error) {
+                Text(
+                    text = (authState as AuthState.Error).message,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 4.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {
-                    isLoading = true
-                    triggerRegister = true
-                },
+                onClick = { viewModel.register(name, email, phoneNumber, password) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                enabled = !isLoading && name.isNotBlank() && email.isNotBlank() &&
-                        phoneNumber.isNotBlank() && password.isNotBlank() &&
+                enabled = authState !is AuthState.Loading &&
+                        name.isNotBlank() &&
+                        email.isNotBlank() &&
+                        phoneNumber.isNotBlank() &&
+                        password.isNotBlank() &&
                         confirmPassword == password
             ) {
-                if (isLoading) {
+                if (authState is AuthState.Loading) {
                     CircularProgressIndicator(
                         color = Color.White,
                         modifier = Modifier.size(20.dp),
@@ -162,4 +169,3 @@ fun RegisterScreen(
         }
     }
 }
-

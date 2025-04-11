@@ -2,24 +2,34 @@ package org.composempfirstapp.project.authentication.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import org.composempfirstapp.project.authentication.data.AuthRepository
+import org.composempfirstapp.project.authentication.data.AuthResponse
+import org.composempfirstapp.project.authentication.data.ErrorResponse
+import org.composempfirstapp.project.authentication.domain.Customer
 
-// Auth states
-sealed class AuthState {
-    object Idle : AuthState()
-    object Loading : AuthState()
-    data class Error(val message: String) : AuthState()
-    object Success : AuthState()
-}
-
-class AuthViewModel : ViewModel() {
+class AuthViewModel(
+    private val authRepository: AuthRepository = AuthRepository()
+) : ViewModel() {
 
     // Auth state
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
+
+    // User state
+    private val _token = MutableStateFlow<String?>(null)
+    private val _customer = MutableStateFlow<Customer?>(null)
+    val customer: StateFlow<Customer?> = _customer.asStateFlow()
+
+    // Verification status
+    private val _isPhoneVerified = MutableStateFlow(false)
+    val isPhoneVerified: StateFlow<Boolean> = _isPhoneVerified.asStateFlow()
 
     // Check if user is already logged in
     private val _isLoggedIn = MutableStateFlow(false)
@@ -32,10 +42,18 @@ class AuthViewModel : ViewModel() {
 
     private fun checkLoginStatus() {
         viewModelScope.launch {
-            // Here you would check for stored credentials or tokens
-            // For example, from SharedPreferences or DataStore
-            // For now, we'll just set it to false
-            _isLoggedIn.value = false
+            val savedToken = retrieveTokenFromStorage()
+            val savedCustomer = retrieveCustomerFromStorage()
+
+            if (savedToken != null && savedCustomer != null) {
+                _token.value = savedToken
+                _customer.value = savedCustomer
+                _isLoggedIn.value = true
+                _isPhoneVerified.value = savedCustomer.phoneNumberVerifiedAt != null
+            } else {
+                _isLoggedIn.value = false
+                _isPhoneVerified.value = false
+            }
         }
     }
 
@@ -44,21 +62,10 @@ class AuthViewModel : ViewModel() {
             _authState.value = AuthState.Loading
 
             try {
-                // Here you would make your API call for login
-                // For demonstration, we'll just simulate a delay
-                kotlinx.coroutines.delay(1500)
-
-                // Check if credentials are valid (replace with actual validation)
-                if (phoneNumber.isNotBlank() && password.isNotBlank()) {
-                    // Save user session information
-                    saveUserSession("user_token")
-                    _isLoggedIn.value = true
-                    _authState.value = AuthState.Success
-                } else {
-                    _authState.value = AuthState.Error("Invalid credentials")
-                }
+                val response = authRepository.login(phoneNumber, password)
+                handleAuthResponse(response)
             } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Unknown error occurred")
+                _authState.value = AuthState.Error(e.message ?: "Login failed. Please try again.")
             }
         }
     }
@@ -68,18 +75,10 @@ class AuthViewModel : ViewModel() {
             _authState.value = AuthState.Loading
 
             try {
-                // Here you would make your API call for registration
-                kotlinx.coroutines.delay(1500)
-
-                // Validate registration data
-                if (name.isNotBlank() && email.isNotBlank() &&
-                    phoneNumber.isNotBlank() && password.isNotBlank()) {
-                    _authState.value = AuthState.Success
-                } else {
-                    _authState.value = AuthState.Error("All fields are required")
-                }
+                val response = authRepository.register(name, email, phoneNumber, password)
+                handleAuthResponse(response)
             } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Unknown error occurred")
+                _authState.value = AuthState.Error(e.message ?: "Registration failed. Please try again.")
             }
         }
     }
@@ -89,42 +88,64 @@ class AuthViewModel : ViewModel() {
             _authState.value = AuthState.Loading
 
             try {
-                // Here you would make your API call for OTP verification
-                kotlinx.coroutines.delay(1500)
-
-                // Check if OTP is valid
-                if (otp.length == 6) {
-                    // Save user session after successful verification
-                    saveUserSession("user_token")
-                    _isLoggedIn.value = true
-                    _authState.value = AuthState.Success
-                } else {
-                    _authState.value = AuthState.Error("Invalid OTP")
-                }
+                val response = authRepository.verifyOtp(phoneNumber, otp)
+                handleAuthResponse(response)
             } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Unknown error occurred")
+                _authState.value = AuthState.Error(e.message ?: "Verification failed. Please try again.")
             }
+        }
+    }
+
+    private suspend fun handleAuthResponse(response: HttpResponse) {
+        try {
+            if (response.status.value in 200..299) {
+                val authResponse = response.body<AuthResponse>()
+
+                _token.value = authResponse.token
+                _customer.value = authResponse.customer
+                _isPhoneVerified.value = authResponse.customer.phoneNumberVerifiedAt != null
+                _isLoggedIn.value = true
+
+                saveUserSession(authResponse.token, authResponse.customer)
+                _authState.value = AuthState.Success
+            } else {
+//                TODO
+//                val errorBody = Json.decodeFromString<ErrorResponse>()
+//                _authState.value = AuthState.Error(errorBody.message)
+            }
+        } catch (e: Exception) {
+            _authState.value = AuthState.Error("Error processing response: ${e.message}")
         }
     }
 
     fun logout() {
         viewModelScope.launch {
-            // Clear user session
             clearUserSession()
+            _token.value = null
+            _customer.value = null
             _isLoggedIn.value = false
+            _isPhoneVerified.value = false
         }
     }
 
-    private fun saveUserSession(token: String) {
-        // Here you would save the user's session token
-        // For example, in SharedPreferences or DataStore
+    private fun saveUserSession(token: String, customer: Customer) {
+
     }
 
     private fun clearUserSession() {
-        // Here you would clear the user's session token
+
     }
 
-    // Reset auth state (e.g., after handling an error)
+    private fun retrieveTokenFromStorage(): String? {
+        // TODO
+        return null;
+    }
+
+    private fun retrieveCustomerFromStorage(): Customer? {
+        // TODO
+        return null;
+    }
+
     fun resetAuthState() {
         _authState.value = AuthState.Idle
     }

@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -19,13 +20,24 @@ import kotlinx.coroutines.launch
 fun VerifyPhoneNumberScreen(
     phoneNumber: String,
     onVerificationSuccess: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    viewModel: AuthViewModel = viewModel()
 ) {
     var otpValue by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
     var remainingTime by remember { mutableStateOf(60) }
     var canResend by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    val authState by viewModel.authState.collectAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            if (viewModel.isPhoneVerified.value) {
+                onVerificationSuccess()
+            }
+            viewModel.resetAuthState()
+        }
+    }
 
     val timerStarted = remember { mutableStateOf(false) }
     if (!timerStarted.value) {
@@ -80,6 +92,15 @@ fun VerifyPhoneNumberScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            if (authState is AuthState.Error) {
+                Text(
+                    text = (authState as AuthState.Error).message,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.align(Alignment.Start)
+                )
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -95,6 +116,7 @@ fun VerifyPhoneNumberScreen(
                         text = "Resend Code",
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable {
+                            // Here you would implement logic to resend OTP
                             remainingTime = 60
                             canResend = false
                             scope.launch {
@@ -120,22 +142,13 @@ fun VerifyPhoneNumberScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = {
-                    isLoading = true
-                    scope.launch {
-                        delay(1500)
-                        isLoading = false
-                        if (otpValue.length == 6) {
-                            onVerificationSuccess()
-                        }
-                    }
-                },
+                onClick = { viewModel.verifyOtp(phoneNumber, otpValue) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                enabled = otpValue.length == 6 && !isLoading
+                enabled = otpValue.length == 6 && authState !is AuthState.Loading
             ) {
-                if (isLoading) {
+                if (authState is AuthState.Loading) {
                     CircularProgressIndicator(
                         color = Color.White,
                         modifier = Modifier.size(20.dp),
