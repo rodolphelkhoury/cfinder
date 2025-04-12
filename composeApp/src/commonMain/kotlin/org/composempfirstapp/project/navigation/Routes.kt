@@ -19,3 +19,14 @@ sealed class SettingRouteScreen (var route : String) {
 sealed class CourtRouteScreen (var route : String) {
     object CourtDetail : CourtRouteScreen("courtDetail")
 }
+
+sealed class AboutsUsRouteScreen (var route : String) {
+    object CourtDetail : CourtRouteScreen("aboutus")
+}
+
+sealed class ProfileRouteScreen(var route: String) {
+    object MyProfile : ProfileRouteScreen("my_profile")
+    object MyCourts : ProfileRouteScreen("my_courts")
+    object Settings : SettingRouteScreen("settings")
+    object AboutUs: AboutsUsRouteScreen("aboutus")
+}
