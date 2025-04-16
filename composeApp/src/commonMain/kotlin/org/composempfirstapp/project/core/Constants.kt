@@ -7,10 +7,8 @@ import androidx.compose.animation.scaleIn
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.booking
 import cfinder.composeapp.generated.resources.dark_mode
-import cfinder.composeapp.generated.resources.headline
 import cfinder.composeapp.generated.resources.home
 import cfinder.composeapp.generated.resources.light_mode
-import cfinder.composeapp.generated.resources.offers
 import cfinder.composeapp.generated.resources.person
 import cfinder.composeapp.generated.resources.profile
 import cfinder.composeapp.generated.resources.system_default
@@ -21,7 +19,7 @@ import org.composempfirstapp.project.core.navigation.MainRouteScreen
 import org.jetbrains.compose.resources.StringResource
 
 const val datastoreFileName = "setting.preferences_pb"
-const val BASE_URL = "https://4zslypf2os.sharedwithexpose.com/api/"
+const val BASE_URL = "https://ame4npbpni.sharedwithexpose.com/api/"
 
 enum class Theme(val title: StringResource) {
     SYSTEM_DEFAULT(Res.string.system_default),

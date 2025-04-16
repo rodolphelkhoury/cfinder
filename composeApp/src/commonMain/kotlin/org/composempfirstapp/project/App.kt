@@ -17,10 +17,7 @@ fun App() {
         )
     }
 
-    // Add test token to AppPreferences on app initialization
     LaunchedEffect(Unit) {
-        // Set a test token for development/testing
-        appPreferences.saveToken("15|ba8ySDvwzWJnGKp9K8ViUtIeSTxD4G6kf3smsMWl6f5a0a23")
     }
 
     val settingViewModel = viewModel {
