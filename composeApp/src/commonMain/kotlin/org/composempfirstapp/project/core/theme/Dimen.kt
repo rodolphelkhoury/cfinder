@@ -1,4 +1,4 @@
-package org.composempfirstapp.project.theme
+package org.composempfirstapp.project.core.theme
 
 import androidx.compose.ui.unit.dp
 

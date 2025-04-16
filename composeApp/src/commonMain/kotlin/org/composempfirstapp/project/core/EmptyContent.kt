@@ -1,4 +1,4 @@
-package org.composempfirstapp.project.utils
+package org.composempfirstapp.project.core
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -15,8 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.retry
-import org.composempfirstapp.project.theme.imageSize
-import org.composempfirstapp.project.theme.smallPadding
+import org.composempfirstapp.project.core.theme.imageSize
+import org.composempfirstapp.project.core.theme.smallPadding
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

@@ -3,7 +3,6 @@ package org.composempfirstapp.project.court.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -20,8 +19,8 @@ import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.logo
 import coil3.compose.AsyncImage
 import org.composempfirstapp.project.court.domain.Court
-import org.composempfirstapp.project.theme.imageSize
-import org.composempfirstapp.project.theme.mediumPadding
+import org.composempfirstapp.project.core.theme.imageSize
+import org.composempfirstapp.project.core.theme.mediumPadding
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -29,7 +28,6 @@ fun CourtComponent(
     modifier: Modifier = Modifier,
     court: Court,
     onClick: () -> Unit,
-
 ) {
     Row(
         modifier = Modifier.clickable {

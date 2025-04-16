@@ -30,7 +30,7 @@ import org.composempfirstapp.project.profile.presentation.settings.SettingViewMo
 import org.composempfirstapp.project.profile.presentation.settings.components.LogoutDialog
 import org.composempfirstapp.project.profile.presentation.settings.components.SettingItem
 import org.composempfirstapp.project.profile.presentation.settings.components.ThemeSelectionDialog
-import org.composempfirstapp.project.utils.Theme
+import org.composempfirstapp.project.core.Theme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

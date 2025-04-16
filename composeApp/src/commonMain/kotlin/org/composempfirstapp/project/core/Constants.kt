@@ -1,4 +1,4 @@
-package org.composempfirstapp.project.utils
+package org.composempfirstapp.project.core
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -16,12 +16,12 @@ import cfinder.composeapp.generated.resources.profile
 import cfinder.composeapp.generated.resources.system_default
 import org.composempfirstapp.project.court.data.CourtsResponse
 import org.composempfirstapp.project.court.domain.Court
-import org.composempfirstapp.project.navigation.BottomNavigationItem
-import org.composempfirstapp.project.navigation.MainRouteScreen
+import org.composempfirstapp.project.core.navigation.BottomNavigationItem
+import org.composempfirstapp.project.core.navigation.MainRouteScreen
 import org.jetbrains.compose.resources.StringResource
 
 const val datastoreFileName = "setting.preferences_pb"
-const val BASE_URL = "https://peyq1nnfap.sharedwithexpose.com/api/"
+const val BASE_URL = "https://bofzuxxffw.sharedwithexpose.com/api/"
 
 enum class Theme(val title: StringResource) {
     SYSTEM_DEFAULT(Res.string.system_default),
@@ -36,11 +36,6 @@ val bottomNavigationList = listOf(
         icon = Res.drawable.home,
         title = Res.string.home,
         route = MainRouteScreen.Home.route
-    ),
-    BottomNavigationItem(
-        icon = Res.drawable.headline,
-        title = Res.string.offers,
-        route = MainRouteScreen.Offers.route
     ),
     BottomNavigationItem(
         icon = Res.drawable.booking,

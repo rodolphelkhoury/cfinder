@@ -1,4 +1,4 @@
-package org.composempfirstapp.project.utils
+package org.composempfirstapp.project.core
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

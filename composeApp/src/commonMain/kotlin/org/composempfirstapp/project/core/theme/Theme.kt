@@ -1,11 +1,11 @@
-package org.composempfirstapp.project.theme
+package org.composempfirstapp.project.core.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import org.composempfirstapp.project.utils.Theme
+import org.composempfirstapp.project.core.Theme
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

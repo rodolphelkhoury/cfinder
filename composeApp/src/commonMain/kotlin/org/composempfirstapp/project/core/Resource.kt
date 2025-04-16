@@ -1,4 +1,4 @@
-package org.composempfirstapp.project.utils
+package org.composempfirstapp.project.core
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.togetherWith

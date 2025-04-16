@@ -20,7 +20,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,10 +39,10 @@ import cfinder.composeapp.generated.resources.cancel
 import cfinder.composeapp.generated.resources.choose_a_theme
 import cfinder.composeapp.generated.resources.logout
 import cfinder.composeapp.generated.resources.logout_description
-import org.composempfirstapp.project.theme.mediumPadding
-import org.composempfirstapp.project.theme.xLargePadding
-import org.composempfirstapp.project.theme.xSmallPadding
-import org.composempfirstapp.project.utils.Theme
+import org.composempfirstapp.project.core.theme.mediumPadding
+import org.composempfirstapp.project.core.theme.xLargePadding
+import org.composempfirstapp.project.core.theme.xSmallPadding
+import org.composempfirstapp.project.core.Theme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

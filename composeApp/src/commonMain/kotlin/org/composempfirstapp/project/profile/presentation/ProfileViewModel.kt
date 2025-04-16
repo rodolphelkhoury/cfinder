@@ -2,16 +2,10 @@ package org.composempfirstapp.project.profile.presentation
 
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import org.composempfirstapp.project.court.domain.Court
-import org.composempfirstapp.project.utils.Resource
-import org.composempfirstapp.project.utils.courts
+import org.composempfirstapp.project.core.Resource
 
 class ProfileViewModel : ViewModel() {
 

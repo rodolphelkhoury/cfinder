@@ -1,4 +1,4 @@
-package org.composempfirstapp.project.navigation
+package org.composempfirstapp.project.core.navigation
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
