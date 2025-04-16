@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.json.Json
+import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.court.presentation.CourtDetailScreen
 import org.composempfirstapp.project.court.presentation.MainScreen
 import org.composempfirstapp.project.core.navigation.CourtRouteScreen
@@ -13,9 +14,11 @@ import org.composempfirstapp.project.core.navigation.SettingRouteScreen
 import org.composempfirstapp.project.profile.presentation.SettingScreen
 import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
 
+
 @Composable
 fun RootNavGraph(
-    settingViewModel: SettingViewModel
+    settingViewModel: SettingViewModel,
+    appPreferences: AppPreferences
 ) {
     val rootNavController = rememberNavController()
     NavHost(
@@ -23,17 +26,16 @@ fun RootNavGraph(
         route = Graph.RootScreenGraph,
         startDestination = Graph.MainScreenGraph
     ) {
-
         composable(
             route = Graph.MainScreenGraph
         ) {
-            MainScreen(rootNavController)
+            MainScreen(rootNavController, appPreferences)
         }
 
         composable(
             route = SettingRouteScreen.Setting.route
         ) {
-            SettingScreen(rootNavController,settingViewModel)
+            SettingScreen(rootNavController, settingViewModel)
         }
 
         composable(
@@ -45,7 +47,6 @@ fun RootNavGraph(
                     Json.decodeFromString(it)
                 )
             }
-
         }
     }
 }

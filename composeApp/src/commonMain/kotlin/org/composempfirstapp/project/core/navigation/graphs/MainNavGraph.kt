@@ -8,7 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import org.composempfirstapp.project.court.presentation.BookingHomeScreen
+import org.composempfirstapp.project.core.AppPreferences
+import org.composempfirstapp.project.court.presentation.CourtHomeScreen
 import org.composempfirstapp.project.core.navigation.Graph
 import org.composempfirstapp.project.core.navigation.MainRouteScreen
 import org.composempfirstapp.project.profile.presentation.ProfileScreen
@@ -19,6 +20,7 @@ fun MainNavGraph(
     rootNavController: NavHostController,
     homeNavHostController: NavHostController,
     paddingValues: PaddingValues,
+    appPreferences: AppPreferences,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -30,7 +32,7 @@ fun MainNavGraph(
         composable(
             route = MainRouteScreen.Home.route
         ) {
-            BookingHomeScreen(rootNavController)
+            CourtHomeScreen(rootNavController, appPreferences)
         }
         composable(
             route = MainRouteScreen.Booking.route

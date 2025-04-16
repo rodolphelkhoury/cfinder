@@ -18,15 +18,16 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.core.BASE_URL
 
-class CourtRepository {
+class CourtRepository(
+    private val appPreferences: AppPreferences
+) {
     private val httpClient = HttpClient {
         defaultRequest {
             url(BASE_URL)
             contentType(ContentType.Application.Json)
-            // TODO
-            header(HttpHeaders.Authorization, "Bearer 2|lVloxN6mN2yaN26dIZybl5aLFBZ4oSMX6PShSVOUcf678595")
         }
         install(HttpTimeout) {
             requestTimeoutMillis = 60_000
@@ -54,17 +55,20 @@ class CourtRepository {
         }
     }
 
-    suspend fun getCourts(searchQuery: String = "") : HttpResponse {
+    suspend fun getCourts(searchQuery: String = ""): HttpResponse {
+        val token = appPreferences.getToken()
+
         return httpClient.get {
             url("courts")
 
-            // Add search parameter if query is not empty
+            token?.let {
+                println("token: $it")
+                header(HttpHeaders.Authorization, "Bearer $it")
+            }
+
             if (searchQuery.isNotEmpty()) {
                 parameter("search", searchQuery)
             }
-
-            // Preserve existing parameter if needed
-            parameter("test", "example")
         }
     }
 }

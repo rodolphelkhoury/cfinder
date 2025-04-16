@@ -1,4 +1,5 @@
 package org.composempfirstapp.project.court.presentation
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.ktor.client.call.body
@@ -20,7 +21,6 @@ class CourtViewModel(
     val courtStateFlow : StateFlow<Resource<List<Court>>>
         get() = _courtStateFlow
 
-    // Search query state
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
 
@@ -28,13 +28,11 @@ class CourtViewModel(
         getCourts()
     }
 
-    // Update search query and trigger search
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
         getCourts(query)
     }
 
-    // Get courts with optional search parameter
     fun getCourts(query: String = _searchQuery.value) {
         viewModelScope.launch(Dispatchers.IO) {
             _courtStateFlow.emit(Resource.Loading)

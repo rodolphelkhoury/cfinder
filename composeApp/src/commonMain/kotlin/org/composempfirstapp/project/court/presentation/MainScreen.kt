@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.core.navigation.BottomNavigationBar
 import org.composempfirstapp.project.core.navigation.graphs.MainNavGraph
 import org.composempfirstapp.project.core.bottomNavigationList
@@ -25,9 +26,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MainScreen(
     rootNavController: NavHostController,
+    appPreferences: AppPreferences,
     modifier: Modifier = Modifier,
 ) {
-
     val homeNavContrller = rememberNavController()
     val navBackStackEntry by homeNavContrller.currentBackStackEntryAsState()
 
@@ -82,7 +83,8 @@ fun MainScreen(
         MainNavGraph(
             rootNavController,
             homeNavContrller,
-            it
+            it,
+            appPreferences
         )
     }
 }

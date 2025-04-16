@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -17,6 +15,7 @@ import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.ic_network_error
 import cfinder.composeapp.generated.resources.ic_browse
 import cfinder.composeapp.generated.resources.no_courts
+import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.court.data.CourtRepository
 import org.composempfirstapp.project.core.EmptyContent
 import org.composempfirstapp.project.core.ShimmerEffect
@@ -25,11 +24,12 @@ import org.composempfirstapp.project.core.theme.mediumPadding
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun BookingHomeScreen(
-    navController: NavController
+fun CourtHomeScreen(
+    navController: NavController,
+    appPreferences: AppPreferences
 ) {
     val courtViewModel = viewModel {
-        CourtViewModel(CourtRepository())
+        CourtViewModel(CourtRepository(appPreferences))
     }
 
     val uiState by courtViewModel.courtStateFlow.collectAsState()
@@ -38,7 +38,6 @@ fun BookingHomeScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Search bar at the top using your custom SearchBar component
         SearchBar(
             text = searchQuery,
             onValueChange = { courtViewModel.updateSearchQuery(it) },
@@ -46,7 +45,6 @@ fun BookingHomeScreen(
             modifier = Modifier.padding(top = mediumPadding)
         )
 
-        // Content area
         Box(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center

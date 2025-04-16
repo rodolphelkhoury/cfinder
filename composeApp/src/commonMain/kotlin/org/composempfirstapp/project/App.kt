@@ -11,11 +11,16 @@ import org.composempfirstapp.project.core.AppPreferences
 @Composable
 @Preview
 fun App() {
-
     val appPreferences = remember {
         AppPreferences(
             dataStorePreference()
         )
+    }
+
+    // Add test token to AppPreferences on app initialization
+    LaunchedEffect(Unit) {
+        // Set a test token for development/testing
+        appPreferences.saveToken("15|ba8ySDvwzWJnGKp9K8ViUtIeSTxD4G6kf3smsMWl6f5a0a23")
     }
 
     val settingViewModel = viewModel {
@@ -27,6 +32,6 @@ fun App() {
     CFinderTheme(
         appTheme = currentTheme
     ) {
-        RootNavGraph(settingViewModel)
+        RootNavGraph(settingViewModel, appPreferences)
     }
 }
