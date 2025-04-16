@@ -16,37 +16,6 @@ fun ProfileScreen(
     modifier: Modifier = Modifier
 ) {
 
-
-
-
-//    val profileViewModel = viewModel {
-//        ProfileViewModel()
-//    }
-//
-//    val uiState by profileViewModel.courtStateFlow.collectAsState()
-//    uiState.DisplayResult(
-//        onIdle = {
-//
-//        },
-//        onLoading = {
-//            ShimmerEffect()
-//        },
-//        onSuccess = { courtList ->
-//            if (courtList.isEmpty()) {
-//                EmptyContent("No courts")
-//
-//            } else {
-//                CourtListScreen(
-//                    courtList = courtList
-//                )
-//            }
-//        },
-//        onError = {
-//            EmptyContent(it)
-//        }
-//    )
-
-
     Box(
         modifier = Modifier,
     ) {
