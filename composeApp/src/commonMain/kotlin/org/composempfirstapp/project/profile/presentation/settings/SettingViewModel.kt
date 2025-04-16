@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.composempfirstapp.project.utils.AppPreferences
-import org.composempfirstapp.project.utils.Theme
+import org.composempfirstapp.project.core.AppPreferences
+import org.composempfirstapp.project.core.Theme
 
 class SettingViewModel(
     private val appPreferences: AppPreferences

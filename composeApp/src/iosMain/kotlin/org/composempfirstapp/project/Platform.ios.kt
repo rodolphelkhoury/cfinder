@@ -10,7 +10,7 @@ import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIActivityViewController
 import platform.UIKit.UIApplication
 import platform.UIKit.UIDevice
-import org.composempfirstapp.project.utils.datastoreFileName
+import org.composempfirstapp.project.core.datastoreFileName
 
 
 class IOSPlatform: Platform {

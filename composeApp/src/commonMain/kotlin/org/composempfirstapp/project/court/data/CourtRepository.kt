@@ -18,7 +18,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.composempfirstapp.project.utils.BASE_URL
+import org.composempfirstapp.project.core.BASE_URL
 
 class CourtRepository {
     private val httpClient = HttpClient {
@@ -54,28 +54,17 @@ class CourtRepository {
         }
     }
 
-
-    suspend fun getCourts() : HttpResponse {
+    suspend fun getCourts(searchQuery: String = "") : HttpResponse {
         return httpClient.get {
             url("courts")
-            // TODO
-            parameter("test", "example")
-        }
-    }
 
-    suspend fun searchCourts(query: String) : HttpResponse {
-        return httpClient.get {
-            url("courts")
-            // TODO
+            // Add search parameter if query is not empty
+            if (searchQuery.isNotEmpty()) {
+                parameter("search", searchQuery)
+            }
+
+            // Preserve existing parameter if needed
             parameter("test", "example")
         }
     }
 }
-
-
-
-
-
-
-
-

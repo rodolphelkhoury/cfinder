@@ -11,8 +11,8 @@ import androidx.navigation.NavController
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.composempfirstapp.project.court.domain.Court
-import org.composempfirstapp.project.navigation.CourtRouteScreen
-import org.composempfirstapp.project.theme.xLargePadding
+import org.composempfirstapp.project.core.navigation.CourtRouteScreen
+import org.composempfirstapp.project.core.theme.xLargePadding
 
 @Composable
 fun CourtListScreen(

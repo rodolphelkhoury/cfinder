@@ -1,4 +1,4 @@
-package org.composempfirstapp.project.navigation
+package org.composempfirstapp.project.core.navigation
 
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource

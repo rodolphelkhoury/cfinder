@@ -16,14 +16,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import org.composempfirstapp.project.navigation.BottomNavigationBar
-import org.composempfirstapp.project.navigation.graphs.MainNavGraph
-import org.composempfirstapp.project.utils.bottomNavigationList
+import org.composempfirstapp.project.core.navigation.BottomNavigationBar
+import org.composempfirstapp.project.core.navigation.graphs.MainNavGraph
+import org.composempfirstapp.project.core.bottomNavigationList
 import org.jetbrains.compose.resources.stringResource
 
-// NOT sure ha lashou
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun MainScreen(
     rootNavController: NavHostController,

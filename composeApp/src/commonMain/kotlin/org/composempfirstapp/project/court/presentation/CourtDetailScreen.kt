@@ -36,9 +36,9 @@ import cfinder.composeapp.generated.resources.settings
 import coil3.compose.AsyncImage
 import org.composempfirstapp.project.court.domain.Court
 import org.composempfirstapp.project.shareLink
-import org.composempfirstapp.project.theme.detailImageSize
-import org.composempfirstapp.project.theme.imageSize
-import org.composempfirstapp.project.theme.xLargePadding
+import org.composempfirstapp.project.core.theme.detailImageSize
+import org.composempfirstapp.project.core.theme.imageSize
+import org.composempfirstapp.project.core.theme.xLargePadding
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

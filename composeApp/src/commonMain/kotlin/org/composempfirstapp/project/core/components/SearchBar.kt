@@ -1,6 +1,5 @@
-package org.composempfirstapp.project.utils.components
+package org.composempfirstapp.project.core.components
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -17,7 +16,7 @@ import androidx.compose.ui.text.input.ImeAction
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.ic_search
 import cfinder.composeapp.generated.resources.search
-import org.composempfirstapp.project.theme.mediumPadding
+import org.composempfirstapp.project.core.theme.mediumPadding
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.material3.TextField
