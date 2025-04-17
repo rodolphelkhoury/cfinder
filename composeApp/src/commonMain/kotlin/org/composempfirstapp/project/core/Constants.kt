@@ -38,7 +38,7 @@ val bottomNavigationList = listOf(
     BottomNavigationItem(
         icon = Res.drawable.booking,
         title = Res.string.booking,
-        route = MainRouteScreen.Booking.route
+        route = MainRouteScreen.Reservation.route
     ),
     BottomNavigationItem(
         icon = Res.drawable.person,
