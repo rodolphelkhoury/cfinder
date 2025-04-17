@@ -5,6 +5,13 @@ object Graph {
     const val MainScreenGraph = "mainScreenGraph"
 }
 
+object AuthRoutes {
+    const val LOGIN = "login"
+    const val REGISTER = "register"
+    const val VERIFY_OTP = "verify_otp"
+    const val AUTH_GRAPH = "auth_graph"
+}
+
 sealed class MainRouteScreen (var route : String) {
     object Home : MainRouteScreen("home")
     object Booking : MainRouteScreen("booking")
