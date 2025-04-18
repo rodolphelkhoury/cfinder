@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.booking
+import cfinder.composeapp.generated.resources.reservation
 import cfinder.composeapp.generated.resources.dark_mode
 import cfinder.composeapp.generated.resources.home
 import cfinder.composeapp.generated.resources.light_mode
@@ -19,15 +20,13 @@ import org.composempfirstapp.project.core.navigation.MainRouteScreen
 import org.jetbrains.compose.resources.StringResource
 
 const val datastoreFileName = "setting.preferences_pb"
-const val BASE_URL = "https://ame4npbpni.sharedwithexpose.com/api/"
+const val BASE_URL = "https://aopcvpqjfd.sharedwithexpose.com/api/"
 
 enum class Theme(val title: StringResource) {
     SYSTEM_DEFAULT(Res.string.system_default),
     LIGHT_MODE(Res.string.light_mode),
     DARK_MODE(Res.string.dark_mode)
 }
-
-val apiKey = ""
 
 val bottomNavigationList = listOf(
     BottomNavigationItem(
@@ -37,8 +36,8 @@ val bottomNavigationList = listOf(
     ),
     BottomNavigationItem(
         icon = Res.drawable.booking,
-        title = Res.string.booking,
-        route = MainRouteScreen.Booking.route
+        title = Res.string.reservation,
+        route = MainRouteScreen.Reservation.route
     ),
     BottomNavigationItem(
         icon = Res.drawable.person,

@@ -45,41 +45,36 @@ fun CourtHomeScreen(
             modifier = Modifier.padding(top = mediumPadding)
         )
 
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.Center
-        ) {
-            uiState.DisplayResult(
-                onIdle = {},
-                onLoading = {
-                    ShimmerEffect()
-                },
-                onSuccess = { courtList ->
-                    if (courtList.isEmpty()) {
-                        EmptyContent(
-                            message = stringResource(Res.string.no_courts),
-                            icon = Res.drawable.ic_network_error,
-                            onRetryClick = {
-                                courtViewModel.getCourts()
-                            }
-                        )
-                    } else {
-                        CourtListScreen(
-                            courtList = courtList,
-                            navController = navController
-                        )
-                    }
-                },
-                onError = {
+        uiState.DisplayResult(
+            onIdle = {},
+            onLoading = {
+                ShimmerEffect()
+            },
+            onSuccess = { courtList ->
+                if (courtList.isEmpty()) {
                     EmptyContent(
-                        message = it,
-                        icon = Res.drawable.ic_browse,
+                        message = stringResource(Res.string.no_courts),
+                        icon = Res.drawable.ic_network_error,
                         onRetryClick = {
                             courtViewModel.getCourts()
                         }
                     )
+                } else {
+                    CourtListScreen(
+                        courtList = courtList,
+                        navController = navController
+                    )
                 }
-            )
-        }
+            },
+            onError = {
+                EmptyContent(
+                    message = it,
+                    icon = Res.drawable.ic_browse,
+                    onRetryClick = {
+                        courtViewModel.getCourts()
+                    }
+                )
+            }
+        )
     }
 }

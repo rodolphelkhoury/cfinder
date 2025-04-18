@@ -14,7 +14,7 @@ object AuthRoutes {
 
 sealed class MainRouteScreen (var route : String) {
     object Home : MainRouteScreen("home")
-    object Booking : MainRouteScreen("booking")
+    object Reservation : MainRouteScreen("reservation")
     object Profile : MainRouteScreen("profile")
 }
 
@@ -24,4 +24,8 @@ sealed class SettingRouteScreen (var route : String) {
 
 sealed class CourtRouteScreen (var route : String) {
     object CourtDetail : CourtRouteScreen("courtDetail")
+}
+
+sealed class ReservationRouteScreen (var route : String) {
+    object ReservationDetail : ReservationRouteScreen("reservationDetail")
 }

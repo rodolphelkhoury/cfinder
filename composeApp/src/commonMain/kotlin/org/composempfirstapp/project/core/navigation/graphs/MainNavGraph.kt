@@ -35,9 +35,9 @@ fun MainNavGraph(
             CourtHomeScreen(rootNavController, appPreferences)
         }
         composable(
-            route = MainRouteScreen.Booking.route
+            route = MainRouteScreen.Reservation.route
         ) {
-            ReservationScreen(rootNavController)
+            ReservationScreen(rootNavController, appPreferences)
         }
         composable(
             route = MainRouteScreen.Profile.route

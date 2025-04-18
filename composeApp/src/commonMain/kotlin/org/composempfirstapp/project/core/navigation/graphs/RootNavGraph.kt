@@ -28,9 +28,11 @@ import org.composempfirstapp.project.court.presentation.CourtDetailScreen
 import org.composempfirstapp.project.court.presentation.MainScreen
 import org.composempfirstapp.project.core.navigation.CourtRouteScreen
 import org.composempfirstapp.project.core.navigation.Graph
+import org.composempfirstapp.project.core.navigation.ReservationRouteScreen
 import org.composempfirstapp.project.core.navigation.SettingRouteScreen
 import org.composempfirstapp.project.profile.presentation.SettingScreen
 import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
+import org.composempfirstapp.project.reservation.presentation.ReservationDetailScreen
 
 
 @Composable
@@ -122,6 +124,15 @@ fun RootNavGraph(
             composable(route = CourtRouteScreen.CourtDetail.route) {
                 rootNavController.previousBackStackEntry?.savedStateHandle?.get<String>("court")?.let {
                     CourtDetailScreen(
+                        rootNavController,
+                        Json.decodeFromString(it)
+                    )
+                }
+            }
+
+            composable(route = ReservationRouteScreen.ReservationDetail.route) {
+                rootNavController.previousBackStackEntry?.savedStateHandle?.get<String>("reservation")?.let {
+                    ReservationDetailScreen(
                         rootNavController,
                         Json.decodeFromString(it)
                     )

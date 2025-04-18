@@ -2,6 +2,7 @@ package org.composempfirstapp.project.court.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -24,8 +25,14 @@ fun CourtListScreen(
         columns = GridCells.Fixed(1),
         verticalArrangement = Arrangement.spacedBy(xLargePadding),
         horizontalArrangement = Arrangement.spacedBy(xLargePadding),
-        contentPadding = PaddingValues(xLargePadding),
-
+        contentPadding = PaddingValues(
+            top = xLargePadding,
+            start = xLargePadding,
+            end = xLargePadding,
+            bottom = xLargePadding
+        ),
+        // Add this modifier to ensure content starts from the top
+        modifier = modifier.fillMaxWidth()
     ) {
         items(
             courtList,
