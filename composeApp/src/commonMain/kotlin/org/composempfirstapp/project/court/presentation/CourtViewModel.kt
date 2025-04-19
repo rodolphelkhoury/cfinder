@@ -15,6 +15,7 @@ import org.composempfirstapp.project.court.domain.Court
 import org.composempfirstapp.project.core.Resource
 import org.composempfirstapp.project.court.data.AvailableReservationsResponse
 import org.composempfirstapp.project.court.data.TimeSlot
+import org.composempfirstapp.project.reservation.data.ReservationsResponse
 
 class CourtViewModel(
     private val courtRepository: CourtRepository
@@ -27,11 +28,25 @@ class CourtViewModel(
     val availableTimeSlotsFlow: StateFlow<Resource<List<TimeSlot>>>
         get() = _availableTimeSlotsFlow
 
+    // Set proper initial state to Idle
+    private val _reservationStatus = MutableStateFlow<Resource<AvailableReservationsResponse>>(Resource.Idle)
+    val reservationStatus: StateFlow<Resource<AvailableReservationsResponse>> = _reservationStatus
+
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
 
     init {
         getCourts()
+    }
+
+    // Add reset function using Idle state
+    fun resetReservationStatus() {
+        _reservationStatus.value = Resource.Idle
+    }
+
+    // Add function to update time slots directly
+    fun updateAvailableTimeSlots(slots: List<TimeSlot>) {
+        _availableTimeSlotsFlow.value = Resource.Success(slots)
     }
 
     fun updateSearchQuery(query: String) {
@@ -57,7 +72,6 @@ class CourtViewModel(
         }
     }
 
-    // Function to get available reservations
     fun getAvailableReservations(courtId: Long, date: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _availableTimeSlotsFlow.emit(Resource.Loading)
@@ -72,6 +86,34 @@ class CourtViewModel(
                 }
             } catch (e: Exception) {
                 _availableTimeSlotsFlow.emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
+    fun createReservation(
+        courtId: Long,
+        date: String,
+        timeSlot: TimeSlot
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _reservationStatus.emit(Resource.Loading)
+            try {
+                val httpResponse = courtRepository.createReservation(
+                    courtId = courtId,
+                    reservationDate = date,
+                    startTime = timeSlot.startTime,
+                    endTime = timeSlot.endTime
+                )
+
+                if (httpResponse.status.value in 200..299) {
+                    val body = httpResponse.body<AvailableReservationsResponse>()
+                    _reservationStatus.emit(Resource.Success(body))
+                } else {
+                    val body = httpResponse.body<ErrorResponse>()
+                    _reservationStatus.emit(Resource.Error(body.message))
+                }
+            } catch (e: Exception) {
+                _reservationStatus.emit(Resource.Error(e.message.toString()))
             }
         }
     }
