@@ -18,11 +18,8 @@ sealed class MainRouteScreen(var route: String) {
     object Profile : MainRouteScreen("profile")
 }
 
-sealed class ProfileRouteScreen(val route: String) {
-    object MyProfile : ProfileRouteScreen("my_profile")
-    object MyCourts  : ProfileRouteScreen("my_courts")
-    object Settings  : ProfileRouteScreen("settings")
-    object AboutUs   : ProfileRouteScreen("aboutus")
+sealed class SettingRouteScreen(var route: String) {
+    object Setting : SettingRouteScreen("settings")
 }
 
 sealed class CourtRouteScreen(var route: String) {

@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.core.authentication.data.AuthRepository
@@ -30,24 +31,22 @@ import org.composempfirstapp.project.court.presentation.CourtDetailScreen
 import org.composempfirstapp.project.court.presentation.MainScreen
 import org.composempfirstapp.project.core.navigation.CourtRouteScreen
 import org.composempfirstapp.project.core.navigation.Graph
-import org.composempfirstapp.project.core.navigation.ProfileRouteScreen
 import org.composempfirstapp.project.core.navigation.ReservationRouteScreen
+import org.composempfirstapp.project.core.navigation.SettingRouteScreen
 import org.composempfirstapp.project.court.data.CourtRepository
 import org.composempfirstapp.project.court.presentation.CourtReservationScreen
 import org.composempfirstapp.project.court.presentation.CourtViewModel
-import org.composempfirstapp.project.profile.presentation.aboutus.AboutUsScreen
-import org.composempfirstapp.project.profile.presentation.mycourts.MyCourtScreen
-import org.composempfirstapp.project.profile.presentation.myprofile.MyProfileScreen
-import org.composempfirstapp.project.profile.presentation.settings.SettingsScreen
-import org.composempfirstapp.project.profile.presentation.settings.SettingsViewModel
+import org.composempfirstapp.project.profile.presentation.SettingScreen
+import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
 import org.composempfirstapp.project.reservation.presentation.ReservationDetailScreen
 
 @Composable
 fun RootNavGraph(
-    settingViewModel: SettingsViewModel,
+    settingViewModel: SettingViewModel,
     appPreferences: AppPreferences
 ) {
     val rootNavController = rememberNavController()
+
     val authRepository = remember { AuthRepository(appPreferences) }
     val authViewModel = viewModel { AuthViewModel(authRepository) }
     val courtViewModel = viewModel { CourtViewModel(CourtRepository(appPreferences)) }
@@ -119,29 +118,15 @@ fun RootNavGraph(
                 }
             }
 
-            // ─── MAIN APP FLOW ─────────────────────────────────
+            // Main graph
             composable(route = Graph.MainScreenGraph) {
-                MainScreen(
-                    rootNavController = rootNavController,
-                    appPreferences = appPreferences
-                )
+                MainScreen(rootNavController, appPreferences)
             }
 
-            // ─── PROFILE SECTION ───────────────────────────────
-            composable(ProfileRouteScreen.MyProfile.route) {
-                MyProfileScreen(rootNavController)
-            }
-            composable(ProfileRouteScreen.MyCourts.route) {
-                MyCourtScreen(rootNavController)
-            }
-            composable(ProfileRouteScreen.Settings.route) {
-                SettingsScreen(rootNavController, settingViewModel)
-            }
-            composable(ProfileRouteScreen.AboutUs.route) {
-                AboutUsScreen(rootNavController)
+            composable(route = SettingRouteScreen.Setting.route) {
+                SettingScreen(rootNavController, settingViewModel)
             }
 
-            // ─── COURT DETAIL & RESERVATION ────────────────────
             composable(route = CourtRouteScreen.CourtDetail.route) {
                 rootNavController.previousBackStackEntry?.savedStateHandle?.get<String>("court")?.let {
                     CourtDetailScreen(
