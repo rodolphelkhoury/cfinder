@@ -4,9 +4,9 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.composempfirstapp.project.core.navigation.graphs.RootNavGraph
-import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
 import org.composempfirstapp.project.core.theme.CFinderTheme
 import org.composempfirstapp.project.core.AppPreferences
+import org.composempfirstapp.project.profile.presentation.settings.SettingsViewModel
 
 @Composable
 @Preview
@@ -21,7 +21,7 @@ fun App() {
     }
 
     val settingViewModel = viewModel {
-        SettingViewModel(appPreferences)
+        SettingsViewModel(appPreferences)
     }
 
     val currentTheme by settingViewModel.currentTheme.collectAsState()
