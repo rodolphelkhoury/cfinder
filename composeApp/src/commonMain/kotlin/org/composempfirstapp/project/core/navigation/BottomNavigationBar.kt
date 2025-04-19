@@ -5,6 +5,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,7 +32,8 @@ fun BottomNavigationBar(
                 icon = {
                     Icon(
                         painter = painterResource(item.icon),
-                        contentDescription = stringResource(item.title)
+                        contentDescription = stringResource(item.title),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 },
                 label = {
@@ -40,7 +42,15 @@ fun BottomNavigationBar(
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Medium
                     )
-                }
+                },
+
+                // force both selected and unselected icons (and labels) to primary
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.primary
+                )
             )
         }
     }
