@@ -11,6 +11,8 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
@@ -20,6 +22,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.core.BASE_URL
+import org.composempfirstapp.project.reservation.data.ReservationRequest
 
 class CourtRepository(
     private val appPreferences: AppPreferences
@@ -82,6 +85,31 @@ class CourtRepository(
             }
 
             parameter("reservation_date", date)
+        }
+    }
+
+    suspend fun createReservation(
+        courtId: Long,
+        reservationDate: String,
+        startTime: String,
+        endTime: String
+    ): HttpResponse {
+        val token = appPreferences.getToken()
+
+        return httpClient.post {
+            url("reservations/$courtId")
+
+            token?.let {
+                header(HttpHeaders.Authorization, "Bearer $it")
+            }
+
+            setBody(
+                ReservationRequest(
+                    reservation_date = reservationDate,
+                    start_time = startTime,
+                    end_time = endTime
+                )
+            )
         }
     }
 }
