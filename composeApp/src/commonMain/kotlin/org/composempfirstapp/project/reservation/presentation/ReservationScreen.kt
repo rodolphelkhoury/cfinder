@@ -27,6 +27,15 @@ import org.composempfirstapp.project.core.ShimmerEffect
 import org.composempfirstapp.project.reservation.data.ReservationRepository
 import org.jetbrains.compose.resources.stringResource
 
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import org.composempfirstapp.project.core.Resource
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ReservationScreen(
     navController: NavController,
@@ -39,8 +48,25 @@ fun ReservationScreen(
     val upcomingState by reservationViewModel.upcomingReservationStateFlow.collectAsState()
     val completedState by reservationViewModel.completedReservationStateFlow.collectAsState()
 
-    // Track which tab is selected
     var selectedTabIndex by remember { mutableStateOf(0) }
+
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+            reservationViewModel.getReservations()
+        }
+    )
+
+    LaunchedEffect(upcomingState, completedState) {
+        if (isRefreshing &&
+            upcomingState !is Resource.Loading &&
+            completedState !is Resource.Loading) {
+            isRefreshing = false
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -62,14 +88,14 @@ fun ReservationScreen(
             )
         }
 
-        // Content area
         Box(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .pullRefresh(pullRefreshState),
             contentAlignment = Alignment.Center
         ) {
             when (selectedTabIndex) {
                 0 -> {
-                    // Upcoming Reservations
                     upcomingState.DisplayResult(
                         onIdle = {},
                         onLoading = {
@@ -103,7 +129,6 @@ fun ReservationScreen(
                     )
                 }
                 1 -> {
-                    // Completed Reservations
                     completedState.DisplayResult(
                         onIdle = {},
                         onLoading = {
@@ -137,6 +162,13 @@ fun ReservationScreen(
                     )
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                contentColor = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

@@ -29,6 +29,8 @@ import kotlinx.datetime.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import org.composempfirstapp.project.court.data.AvailableReservationsResponse
+import org.composempfirstapp.project.reservation.data.ReservationsResponse
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,15 +43,87 @@ fun CourtReservationScreen(
     val selectedDate = remember { mutableStateOf(now) }
     val selectedTimeSlot = remember { mutableStateOf<TimeSlot?>(null) }
     val timeSlotsState by viewModel.availableTimeSlotsFlow.collectAsState()
+    val reservationStatus by viewModel.reservationStatus.collectAsState()
 
     val currentMonth = remember {
         mutableStateOf(Pair(now.year, now.monthNumber))
     }
 
+    // Show a success message when reservation is created
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(selectedDate.value) {
         viewModel.getAvailableReservations(
             court.id,
             selectedDate.value.toString()
+        )
+    }
+
+    // Handle reservation success
+    LaunchedEffect(reservationStatus) {
+        when (reservationStatus) {
+            is Resource.Success -> {
+                // Update available time slots with the new data from response
+                val response = (reservationStatus as Resource.Success<AvailableReservationsResponse>).data
+
+                // Update the available slots with the response data
+                response.availableReservations?.let { slots ->
+                    viewModel.updateAvailableTimeSlots(slots)
+                }
+
+                // Reset selected time slot since it's now reserved
+                selectedTimeSlot.value = null
+
+                // Show success dialog instead of navigating immediately
+                showSuccessDialog = true
+            }
+            else -> {}
+        }
+    }
+
+    // Success dialog
+    if (showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showSuccessDialog = false
+                // Reset reservation status after showing success
+                viewModel.resetReservationStatus()
+            },
+            title = { Text("Reservation Successful") },
+            text = {
+                Text("Your court has been successfully reserved. You can view your reservation in the reservations list.")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showSuccessDialog = false
+                        viewModel.resetReservationStatus()
+                    }
+                ) {
+                    Text("Okay")
+                }
+            }
+        )
+    }
+
+    // Show loading dialog when creating reservation
+    if (reservationStatus is Resource.Loading) {
+        AlertDialog(
+            onDismissRequest = { },
+            title = { Text("Creating Reservation") },
+            text = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    CircularProgressIndicator()
+                    Text(
+                        "Processing your reservation...",
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+            },
+            confirmButton = { }
         )
     }
 
@@ -77,6 +151,7 @@ fun CourtReservationScreen(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
+            // Calendar section
             Text(
                 text = "Select Date",
                 style = MaterialTheme.typography.titleMedium,
@@ -194,6 +269,7 @@ fun CourtReservationScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
+            // Available time slots section
             when (timeSlotsState) {
                 is Resource.Loading -> {
                     Box(
@@ -316,17 +392,19 @@ fun CourtReservationScreen(
                             .height(200.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Waiting for time slot data...")
+                        Text("Select a date to see available time slots")
                     }
                 }
             }
 
             Button(
                 onClick = {
-                    selectedTimeSlot.value?.let {
-                        navController.navigate(MainRouteScreen.Reservation.route) {
-                            popUpTo(MainRouteScreen.Home.route)
-                        }
+                    selectedTimeSlot.value?.let { timeSlot ->
+                        viewModel.createReservation(
+                            courtId = court.id,
+                            date = selectedDate.value.toString(),
+                            timeSlot = timeSlot
+                        )
                     }
                 },
                 enabled = selectedTimeSlot.value != null,
@@ -337,6 +415,21 @@ fun CourtReservationScreen(
                 Text("Confirm Reservation")
             }
         }
+    }
+
+    // Add error handling for reservation errors
+    if (reservationStatus is Resource.Error) {
+        val errorMessage = (reservationStatus as Resource.Error).message
+        AlertDialog(
+            onDismissRequest = { viewModel.resetReservationStatus() },
+            title = { Text("Reservation Failed") },
+            text = { Text("Error: $errorMessage") },
+            confirmButton = {
+                Button(onClick = { viewModel.resetReservationStatus() }) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
 

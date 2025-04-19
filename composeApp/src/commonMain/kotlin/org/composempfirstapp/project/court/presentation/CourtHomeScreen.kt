@@ -23,6 +23,18 @@ import org.composempfirstapp.project.core.components.SearchBar
 import org.composempfirstapp.project.core.theme.mediumPadding
 import org.jetbrains.compose.resources.stringResource
 
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import org.composempfirstapp.project.core.Resource
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CourtHomeScreen(
     navController: NavController,
@@ -35,46 +47,78 @@ fun CourtHomeScreen(
     val uiState by courtViewModel.courtStateFlow.collectAsState()
     val searchQuery by courtViewModel.searchQuery.collectAsState()
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        SearchBar(
-            text = searchQuery,
-            onValueChange = { courtViewModel.updateSearchQuery(it) },
-            onSearch = { courtViewModel.getCourts(it) },
-            modifier = Modifier.padding(top = mediumPadding)
-        )
+    // For pull refresh, track a separate refreshing state
+    var isRefreshing by remember { mutableStateOf(false) }
 
-        uiState.DisplayResult(
-            onIdle = {},
-            onLoading = {
-                ShimmerEffect()
-            },
-            onSuccess = { courtList ->
-                if (courtList.isEmpty()) {
+    // Pull-to-refresh state
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+            courtViewModel.getCourts(searchQuery)
+        }
+    )
+
+    // Reset isRefreshing when loading completes
+    LaunchedEffect(uiState) {
+        if (isRefreshing && uiState !is Resource.Loading) {
+            isRefreshing = false
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            SearchBar(
+                text = searchQuery,
+                onValueChange = { courtViewModel.updateSearchQuery(it) },
+                onSearch = { courtViewModel.getCourts(it) },
+                modifier = Modifier.padding(top = mediumPadding)
+            )
+
+            uiState.DisplayResult(
+                onIdle = {},
+                onLoading = {
+                    ShimmerEffect()
+                },
+                onSuccess = { courtList ->
+                    if (courtList.isEmpty()) {
+                        EmptyContent(
+                            message = stringResource(Res.string.no_courts),
+                            icon = Res.drawable.ic_network_error,
+                            onRetryClick = {
+                                courtViewModel.getCourts()
+                            }
+                        )
+                    } else {
+                        CourtListScreen(
+                            courtList = courtList,
+                            navController = navController
+                        )
+                    }
+                },
+                onError = {
                     EmptyContent(
-                        message = stringResource(Res.string.no_courts),
-                        icon = Res.drawable.ic_network_error,
+                        message = it,
+                        icon = Res.drawable.ic_browse,
                         onRetryClick = {
                             courtViewModel.getCourts()
                         }
                     )
-                } else {
-                    CourtListScreen(
-                        courtList = courtList,
-                        navController = navController
-                    )
                 }
-            },
-            onError = {
-                EmptyContent(
-                    message = it,
-                    icon = Res.drawable.ic_browse,
-                    onRetryClick = {
-                        courtViewModel.getCourts()
-                    }
-                )
-            }
+            )
+        }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+            contentColor = MaterialTheme.colorScheme.primary
         )
     }
 }
