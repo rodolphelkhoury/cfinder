@@ -2,7 +2,9 @@ package org.composempfirstapp.project.core.navigation.graphs
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.core.authentication.data.AuthRepository
@@ -30,10 +33,12 @@ import org.composempfirstapp.project.core.navigation.CourtRouteScreen
 import org.composempfirstapp.project.core.navigation.Graph
 import org.composempfirstapp.project.core.navigation.ReservationRouteScreen
 import org.composempfirstapp.project.core.navigation.SettingRouteScreen
+import org.composempfirstapp.project.court.data.CourtRepository
+import org.composempfirstapp.project.court.presentation.CourtReservationScreen
+import org.composempfirstapp.project.court.presentation.CourtViewModel
 import org.composempfirstapp.project.profile.presentation.SettingScreen
 import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
 import org.composempfirstapp.project.reservation.presentation.ReservationDetailScreen
-
 
 @Composable
 fun RootNavGraph(
@@ -44,6 +49,7 @@ fun RootNavGraph(
 
     val authRepository = remember { AuthRepository(appPreferences) }
     val authViewModel = viewModel { AuthViewModel(authRepository) }
+    val courtViewModel = viewModel { CourtViewModel(CourtRepository(appPreferences)) }
 
     var startDestination by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(true) }
@@ -112,7 +118,7 @@ fun RootNavGraph(
                 }
             }
 
-            // Main graph - existing code
+            // Main graph
             composable(route = Graph.MainScreenGraph) {
                 MainScreen(rootNavController, appPreferences)
             }
@@ -125,7 +131,8 @@ fun RootNavGraph(
                 rootNavController.previousBackStackEntry?.savedStateHandle?.get<String>("court")?.let {
                     CourtDetailScreen(
                         rootNavController,
-                        Json.decodeFromString(it)
+                        Json.decodeFromString(it),
+                        courtViewModel
                     )
                 }
             }
@@ -136,6 +143,24 @@ fun RootNavGraph(
                         rootNavController,
                         Json.decodeFromString(it)
                     )
+                }
+            }
+
+            composable(route = ReservationRouteScreen.CourtReservation.route) {
+                rootNavController.previousBackStackEntry?.savedStateHandle?.get<String>("court")?.let {
+                    CourtReservationScreen(
+                        navController = rootNavController,
+                        court = Json.decodeFromString(it),
+                        viewModel = courtViewModel
+                    )
+                } ?: run {
+                    // Fallback in case court data is missing
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("Error: Court data not found")
+                        Button(onClick = { rootNavController.popBackStack() }) {
+                            Text("Go Back")
+                        }
+                    }
                 }
             }
         }

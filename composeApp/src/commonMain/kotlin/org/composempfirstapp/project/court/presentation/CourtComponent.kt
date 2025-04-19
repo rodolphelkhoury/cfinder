@@ -5,16 +5,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.logo
 import coil3.compose.AsyncImage
@@ -27,25 +32,28 @@ import org.jetbrains.compose.resources.painterResource
 fun CourtComponent(
     modifier: Modifier = Modifier,
     court: Court,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.clickable {
-            onClick()
-        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(mediumPadding)
     ) {
         AsyncImage(
-            modifier = Modifier.size(imageSize).clip(MaterialTheme.shapes.large).background(Color.Gray),
+            modifier = Modifier
+                .size(imageSize)
+                .clip(MaterialTheme.shapes.large)
+                .background(Color.Gray),
             model = court.imageUrl,
             error = painterResource(Res.drawable.logo),
             contentScale = ContentScale.Crop,
-            contentDescription =  null
+            contentDescription = null
         )
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(mediumPadding),
-
         ) {
             Text(
                 text = court.name,
@@ -56,7 +64,6 @@ fun CourtComponent(
                 maxLines = 2
             )
 
-            // or maybe location ??
             court.description?.let {
                 Text(
                     text = it,
@@ -68,7 +75,7 @@ fun CourtComponent(
             }
 
             Text(
-                text = court.hourlyRate.toString(),
+                text = "${court.hourlyRate} per hour",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
@@ -76,16 +83,6 @@ fun CourtComponent(
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -73,6 +73,8 @@ kotlin {
             implementation(libs.ktor.negotiation)
             implementation(libs.kotlinx.serialization.json)
 
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+
             //Kermit  for logging
             implementation(libs.kermit)
         }

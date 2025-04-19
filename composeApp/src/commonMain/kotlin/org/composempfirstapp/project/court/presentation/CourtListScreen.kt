@@ -13,6 +13,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.composempfirstapp.project.court.domain.Court
 import org.composempfirstapp.project.core.navigation.CourtRouteScreen
+import org.composempfirstapp.project.core.navigation.ReservationRouteScreen
 import org.composempfirstapp.project.core.theme.xLargePadding
 
 @Composable
@@ -31,7 +32,6 @@ fun CourtListScreen(
             end = xLargePadding,
             bottom = xLargePadding
         ),
-        // Add this modifier to ensure content starts from the top
         modifier = modifier.fillMaxWidth()
     ) {
         items(
@@ -39,13 +39,13 @@ fun CourtListScreen(
             key = {
                 it.id
             }
-        ) {
+        ) { court ->
             CourtComponent(
-                court = it,
+                court = court,
                 onClick = {
-                    val court = Json.encodeToString(it)
+                    val encodedCourt = Json.encodeToString(court)
                     navController.currentBackStackEntry?.savedStateHandle?.apply {
-                        set("court", court)
+                        set("court", encodedCourt)
                     }
                     navController.navigate(CourtRouteScreen.CourtDetail.route)
                 }

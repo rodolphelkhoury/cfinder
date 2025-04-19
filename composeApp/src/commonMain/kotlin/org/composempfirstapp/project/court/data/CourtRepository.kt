@@ -62,13 +62,26 @@ class CourtRepository(
             url("courts")
 
             token?.let {
-                println("token: $it")
                 header(HttpHeaders.Authorization, "Bearer $it")
             }
 
             if (searchQuery.isNotEmpty()) {
                 parameter("search", searchQuery)
             }
+        }
+    }
+
+    suspend fun getAvailableReservations(courtId: Long, date: String): HttpResponse {
+        val token = appPreferences.getToken()
+
+        return httpClient.get {
+            url("courts/$courtId/available-reservations")  // Fixed API endpoint
+
+            token?.let {
+                header(HttpHeaders.Authorization, "Bearer $it")
+            }
+
+            parameter("reservation_date", date)
         }
     }
 }
