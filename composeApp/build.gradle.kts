@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinx.serialization)
-
 }
 
 kotlin {
@@ -18,7 +17,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -29,59 +28,68 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
-        
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
+        androidMain {
+            dependencies {
+                implementation(compose.preview)
+                implementation(libs.androidx.activity.compose)
 
-            // Ktor
-            implementation(libs.ktor.client.android)
+                // Ktor
+                implementation(libs.ktor.client.android)
+            }
         }
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
 
-            implementation(compose.material3)
+        commonMain {
+            resources.srcDirs("src/commonMain/resources", "src/commonMain/composeResources")
 
-            // navigation
-            implementation(libs.navigation.compose)
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(libs.androidx.lifecycle.viewmodel)
+                implementation(libs.androidx.lifecycle.runtime.compose)
+                implementation(compose.material3)
 
-            // ViewModel
-            implementation(libs.androidx.lifecycle.viewmodel)
+                // Navigation
+                implementation(libs.navigation.compose)
 
-            //Coil
-            implementation(libs.coil.compose.core)
-            implementation(libs.coil.compose)
-            implementation(libs.coil.mp)
-            implementation(libs.coil.network.ktor3)
+                // ViewModel
+                implementation(libs.androidx.lifecycle.viewmodel)
 
-            //dataStore for localstorage, good for authentication token
-            implementation(libs.androidx.data.store.core)
+                // Coil
+                implementation(libs.coil.compose.core)
+                implementation(libs.coil.compose)
+                implementation(libs.coil.mp)
+                implementation(libs.coil.network.ktor3)
 
-            // Ktor
-            implementation(libs.ktor.core)
-            implementation(libs.ktor.json)
-            implementation(libs.ktor.logging)
-            implementation(libs.ktor.negotiation)
-            implementation(libs.kotlinx.serialization.json)
+                // DataStore
+                implementation(libs.androidx.data.store.core)
 
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+                // Ktor
+                implementation(libs.ktor.core)
+                implementation(libs.ktor.json)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.negotiation)
+                implementation(libs.kotlinx.serialization.json)
 
-            //Kermit  for logging
-            implementation(libs.kermit)
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+                implementation("androidx.compose.material3:material3:1.2.1")
+                implementation("androidx.core:core-splashscreen:1.0.1")
+
+                // Logging
+                implementation(libs.kermit)
+            }
         }
-        iosMain.dependencies {
 
-            // Ktor
-            implementation(libs.ktor.client.darwin)
+        iosMain {
+            dependencies {
+                // Ktor
+                implementation(libs.ktor.client.darwin)
+            }
         }
     }
 }
@@ -97,16 +105,22 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+
+    sourceSets["main"].resources.srcDirs("src/androidMain/resources")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -116,4 +130,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

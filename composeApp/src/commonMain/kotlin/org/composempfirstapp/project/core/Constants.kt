@@ -6,12 +6,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.booking
-import cfinder.composeapp.generated.resources.reservation
 import cfinder.composeapp.generated.resources.dark_mode
 import cfinder.composeapp.generated.resources.home
 import cfinder.composeapp.generated.resources.light_mode
 import cfinder.composeapp.generated.resources.person
 import cfinder.composeapp.generated.resources.profile
+import cfinder.composeapp.generated.resources.reservation
 import cfinder.composeapp.generated.resources.system_default
 import org.composempfirstapp.project.court.data.CourtsResponse
 import org.composempfirstapp.project.court.domain.Court
