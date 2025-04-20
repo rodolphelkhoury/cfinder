@@ -132,7 +132,7 @@ fun RootNavGraph(
             }
 
             composable(route = SettingRouteScreen.Setting.route) {
-                SettingScreen(rootNavController, settingViewModel)
+                SettingScreen(rootNavController, settingViewModel, authRepository)
             }
 
             composable(route = CourtRouteScreen.CourtDetail.route) {
@@ -183,7 +183,8 @@ fun RootNavGraph(
             composable(ProfileRouteScreen.Settings.route) {
                 SettingScreen(
                     rootNavController,
-                    settingViewModel
+                    settingViewModel,
+                    authRepository
                 )
             }
             composable(ProfileRouteScreen.AboutUs.route) {

@@ -106,4 +106,8 @@ class AuthRepository(
         // You may want to implement a more robust check based on your backend
         return true // Placeholder implementation
     }
+
+    suspend fun logout() {
+        appPreferences.clearToken()
+    }
 }
