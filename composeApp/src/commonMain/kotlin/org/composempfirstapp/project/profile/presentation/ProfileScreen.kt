@@ -81,8 +81,8 @@ fun ProfileScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         ProfileNavigationItem(
-            title = "My Courts",
-            onClick = { rootNavController.navigate(ProfileRouteScreen.MyCourts.route) }
+            title = "My Favorites",
+            onClick = { rootNavController.navigate(ProfileRouteScreen.MyFavorites.route) }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
