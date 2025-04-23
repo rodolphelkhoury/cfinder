@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Court(
+
     @SerialName("id")
     val id: Long,
 
@@ -40,6 +41,8 @@ data class Court(
 
     @SerialName("image_url")
     val imageUrl: String?,
+
+
 //    val sections: List<Section> = emptyList(),
 //    val complex: Complex,
 //    val courtType: CourtType,

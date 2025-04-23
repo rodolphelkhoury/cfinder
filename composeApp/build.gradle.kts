@@ -18,7 +18,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -29,12 +29,13 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("androidx.datastore:datastore-preferences:1.1.0")
 
             // Ktor
             implementation(libs.ktor.client.android)
@@ -48,6 +49,12 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+            implementation("com.russhwolf:multiplatform-settings:1.0.0")
+            implementation("com.russhwolf.settings:multiplatform-settings:1.0.0")
+
+
 
             implementation(compose.material3)
 
@@ -116,4 +123,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

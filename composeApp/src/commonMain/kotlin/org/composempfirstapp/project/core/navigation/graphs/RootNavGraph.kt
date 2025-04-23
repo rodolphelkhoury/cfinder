@@ -18,7 +18,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.core.authentication.data.AuthRepository
@@ -31,6 +30,7 @@ import org.composempfirstapp.project.court.presentation.CourtDetailScreen
 import org.composempfirstapp.project.court.presentation.MainScreen
 import org.composempfirstapp.project.core.navigation.CourtRouteScreen
 import org.composempfirstapp.project.core.navigation.Graph
+import org.composempfirstapp.project.core.navigation.MainRouteScreen
 import org.composempfirstapp.project.core.navigation.ProfileRouteScreen
 import org.composempfirstapp.project.core.navigation.ReservationRouteScreen
 import org.composempfirstapp.project.core.navigation.SettingRouteScreen
@@ -41,15 +41,18 @@ import org.composempfirstapp.project.profile.data.ProfileRepository
 import org.composempfirstapp.project.profile.presentation.ProfileViewModel
 import org.composempfirstapp.project.profile.presentation.SettingScreen
 import org.composempfirstapp.project.profile.presentation.aboutus.AboutUsScreen
-import org.composempfirstapp.project.profile.presentation.mycourts.MyCourtsScreen
+import org.composempfirstapp.project.profile.presentation.myfavorites.FavoritesViewModel
+import org.composempfirstapp.project.profile.presentation.myfavorites.MyFavoritesScreen
 import org.composempfirstapp.project.profile.presentation.myprofilescreen.MyProfileScreen
 import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
+import org.composempfirstapp.project.reservation.domain.Reservation
 import org.composempfirstapp.project.reservation.presentation.ReservationDetailScreen
 
 @Composable
 fun RootNavGraph(
     settingViewModel: SettingViewModel,
-    appPreferences: AppPreferences
+    appPreferences: AppPreferences,
+    favoritesViewModel: FavoritesViewModel
 ) {
     val rootNavController = rememberNavController()
 
@@ -175,11 +178,11 @@ fun RootNavGraph(
             composable(ProfileRouteScreen.MyProfile.route) {
                 MyProfileScreen(rootNavController)
             }
-            composable(ProfileRouteScreen.MyCourts.route) {
-                MyCourtsScreen(
-                    rootNavController
-                )
+
+            composable(route = ProfileRouteScreen.MyFavorites.route) {
+                MyFavoritesScreen(rootNavController, favoritesViewModel)
             }
+
             composable(ProfileRouteScreen.Settings.route) {
                 SettingScreen(
                     rootNavController,
@@ -190,6 +193,15 @@ fun RootNavGraph(
             composable(ProfileRouteScreen.AboutUs.route) {
                 AboutUsScreen(rootNavController)
             }
+
+            composable(route = ReservationRouteScreen.ReservationDetail.route) {
+                val reservationJson = rootNavController.previousBackStackEntry?.savedStateHandle?.get<String>("reservation")
+                val reservation = reservationJson?.let { Json.decodeFromString<Reservation>(it) }
+                if (reservation != null) {
+                    ReservationDetailScreen(rootNavController, reservation, favoritesViewModel)
+                }
+            }
+
         }
     }
 }

@@ -141,7 +141,7 @@ fun CourtDetailScreen(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Reserve This Court")
+                Text("Reserve this court")
             }
         }
     }

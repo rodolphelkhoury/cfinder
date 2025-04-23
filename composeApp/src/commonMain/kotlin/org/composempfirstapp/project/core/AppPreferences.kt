@@ -4,8 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
+import org.composempfirstapp.project.court.domain.Court
 
 class AppPreferences(
     private val dataStore: DataStore<Preferences>
@@ -31,5 +34,7 @@ class AppPreferences(
 
     suspend fun changeTheme(theme: Theme) {
         dataStore.edit { it[themeKey] = theme.name }
+
     }
+
 }
