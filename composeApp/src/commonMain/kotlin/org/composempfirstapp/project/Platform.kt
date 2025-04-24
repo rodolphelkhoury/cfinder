@@ -1,5 +1,7 @@
 package org.composempfirstapp.project
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -42,3 +44,15 @@ object AppSettings {
         }
     }
 }
+
+expect fun initializeMaps()
+
+expect fun openInExternalMaps(context: Any, latitude: Double, longitude: Double, label: String)
+
+@Composable
+expect fun CourtLocationMap(
+    latitude: Double,
+    longitude: Double,
+    courtName: String,
+    modifier: Modifier = Modifier
+)
