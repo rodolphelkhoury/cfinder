@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinx.serialization)
-
 }
 
 kotlin {
@@ -18,7 +17,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -29,15 +28,18 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
             // Ktor
             implementation(libs.ktor.client.android)
+
+            // Replace Google Maps with OSMDroid
+            implementation("org.osmdroid:osmdroid-android:6.1.17")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -75,11 +77,10 @@ kotlin {
 
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 
-            //Kermit  for logging
+            //Kermit for logging
             implementation(libs.kermit)
         }
         iosMain.dependencies {
-
             // Ktor
             implementation(libs.ktor.client.darwin)
         }
@@ -116,4 +117,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

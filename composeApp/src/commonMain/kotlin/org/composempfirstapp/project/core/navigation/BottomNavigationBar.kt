@@ -31,7 +31,8 @@ fun BottomNavigationBar(
                 icon = {
                     Icon(
                         painter = painterResource(item.icon),
-                        contentDescription = stringResource(item.title)
+                        contentDescription = stringResource(item.title),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 },
                 label = {

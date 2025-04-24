@@ -40,6 +40,12 @@ data class Court(
 
     @SerialName("image_url")
     val imageUrl: String?,
+
+    @SerialName("longitude")
+    val longitude: Double,
+
+    @SerialName("latitude")
+    val latitude: Double,
 //    val sections: List<Section> = emptyList(),
 //    val complex: Complex,
 //    val courtType: CourtType,

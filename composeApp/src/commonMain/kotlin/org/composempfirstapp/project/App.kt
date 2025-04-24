@@ -18,6 +18,7 @@ fun App() {
     }
 
     LaunchedEffect(Unit) {
+        initializeMaps()
     }
 
     val settingViewModel = viewModel {
