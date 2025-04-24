@@ -91,7 +91,6 @@ fun LogoutDialog(
 @Composable
 fun ThemeSelectionDialog(
     modifier: Modifier = Modifier,
-    // TODO pass the theme fard mara
     currentTheme: String,
     onThemeChange: (Theme) -> Unit,
     onDismissRequest: () -> Unit

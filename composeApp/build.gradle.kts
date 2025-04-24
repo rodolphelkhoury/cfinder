@@ -38,6 +38,7 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.android)
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)

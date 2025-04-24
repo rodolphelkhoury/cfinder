@@ -25,8 +25,8 @@ fun App() {
         SettingViewModel(appPreferences)
     }
 
-    val favoritesViewModel = viewModel {
-        MyFavoritesViewModel()
+    val favoritesViewModel: MyFavoritesViewModel = viewModel {
+        MyFavoritesViewModel(appPreferences)
     }
 
     val currentTheme by settingViewModel.currentTheme.collectAsState()
