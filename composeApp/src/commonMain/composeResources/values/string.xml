@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">CFinder</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="system_default">System Default</string>
+    <string name="home">Home</string>
+    <string name="offers">Offers</string>
+    <string name="reservation">Reservation</string>
+    <string name="profile">Profile</string>
+    <string name="settings">App settings</string>
+    <string name="search">Search</string>
+    <string name="theme">Theme</string>
+    <string name="logout">Logout</string>
+    <string name="logout_description">Are you sure you want to logout?</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_a_theme">Choose a theme</string>
+    <string name="apply">Apply</string>
+    <string name="court_details">Court Details</string>
+    <string name="retry">Retry</string>
+    <string name="no_courts">No Courts Available</string>
+    <string name="no_reservations">No Reservations Available</string>
+    <string name="type_to_search">Type To Search</string>
+</resources>
