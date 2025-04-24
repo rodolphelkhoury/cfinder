@@ -50,18 +50,6 @@ fun MainScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(topBarTitle),
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            )
-        },
         bottomBar = {
             BottomNavigationBar(
                 items = bottomNavigationList,

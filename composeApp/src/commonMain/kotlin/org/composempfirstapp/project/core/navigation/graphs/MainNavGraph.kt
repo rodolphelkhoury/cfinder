@@ -1,5 +1,6 @@
 package org.composempfirstapp.project.core.navigation.graphs
 
+
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,9 +12,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import org.composempfirstapp.project.core.AppPreferences
-import org.composempfirstapp.project.court.presentation.CourtHomeScreen
 import org.composempfirstapp.project.core.navigation.Graph
 import org.composempfirstapp.project.core.navigation.MainRouteScreen
+import org.composempfirstapp.project.court.presentation.CourtHomeScreen
 import org.composempfirstapp.project.profile.data.ProfileRepository
 import org.composempfirstapp.project.profile.presentation.ProfileScreen
 import org.composempfirstapp.project.profile.presentation.ProfileViewModel
