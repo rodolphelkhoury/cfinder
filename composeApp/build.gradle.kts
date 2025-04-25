@@ -38,8 +38,10 @@ kotlin {
             // Ktor
             implementation(libs.ktor.client.android)
 
+
             // Replace Google Maps with OSMDroid
             implementation("org.osmdroid:osmdroid-android:6.1.17")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)

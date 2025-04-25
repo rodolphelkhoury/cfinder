@@ -7,6 +7,7 @@ import org.composempfirstapp.project.core.navigation.graphs.RootNavGraph
 import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
 import org.composempfirstapp.project.core.theme.CFinderTheme
 import org.composempfirstapp.project.core.AppPreferences
+import org.composempfirstapp.project.profile.presentation.myfavorites.MyFavoritesViewModel
 
 @Composable
 @Preview
@@ -25,11 +26,15 @@ fun App() {
         SettingViewModel(appPreferences)
     }
 
+    val favoritesViewModel: MyFavoritesViewModel = viewModel {
+        MyFavoritesViewModel(appPreferences)
+    }
+
     val currentTheme by settingViewModel.currentTheme.collectAsState()
 
     CFinderTheme(
         appTheme = currentTheme
     ) {
-        RootNavGraph(settingViewModel, appPreferences)
+        RootNavGraph(settingViewModel, appPreferences, favoritesViewModel)
     }
 }

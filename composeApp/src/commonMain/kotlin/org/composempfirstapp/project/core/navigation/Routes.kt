@@ -33,7 +33,7 @@ sealed class ReservationRouteScreen(var route: String) {
 
 sealed class ProfileRouteScreen(val route: String) {
     object MyProfile : ProfileRouteScreen("myProfile")
-    object MyCourts  : ProfileRouteScreen("myCourts")
+    object MyFavorites  : ProfileRouteScreen("myFavorites")
     object Settings  : ProfileRouteScreen("settings")
     object AboutUs   : ProfileRouteScreen("aboutus")
 }

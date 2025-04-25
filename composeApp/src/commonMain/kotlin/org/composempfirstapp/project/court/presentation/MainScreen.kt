@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -42,13 +41,15 @@ fun MainScreen(
             .fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         containerColor = MaterialTheme.colorScheme.background,  // Automatically adapts to dark/light theme
-        topBar = { TopBar(
-            notificationCount = notificationCount,
-            onNotificationClick = { rootNavController.navigate("notifications") }
-        ) },
+        topBar = {
+            TopBar(
+                notificationCount = notificationCount,
+                onNotificationClick = { rootNavController.navigate("notifications") }
+            )
+        },
         bottomBar = {
             BottomNavigationBar(
-                items = bottomNavigationList,
+                 items = bottomNavigationList,
                 currentRoute = currentRoute,
                 onItemClick = { currentBottomNavigationItem ->
                     homeNavContrller.navigate(currentBottomNavigationItem.route) {
