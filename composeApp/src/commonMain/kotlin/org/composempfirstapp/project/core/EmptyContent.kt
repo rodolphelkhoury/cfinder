@@ -26,7 +26,8 @@ fun EmptyContent(
     message: String,
     icon: DrawableResource,
     isOnRetryBtnVisible: Boolean = true,
-    onRetryClick: (() -> Unit) = { }
+    onRetryClick: (() -> Unit) = { },
+    iconModifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -34,7 +35,7 @@ fun EmptyContent(
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            modifier = Modifier.size(imageSize),
+            modifier = iconModifier.size(imageSize),
             painter = painterResource(icon),
             tint = if (!isSystemInDarkTheme()) LightGray else DarkGray,
             contentDescription = null

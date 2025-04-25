@@ -6,7 +6,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -85,6 +84,7 @@ fun CourtHomeScreen(
                         EmptyContent(
                             message = stringResource(Res.string.no_courts),
                             icon = Res.drawable.ic_network_error,
+                            iconModifier = Modifier.padding(end = 12.dp),
                             onRetryClick = {
                                 courtViewModel.getCourts()
                             }
@@ -100,11 +100,13 @@ fun CourtHomeScreen(
                     EmptyContent(
                         message = it,
                         icon = Res.drawable.ic_browse,
+                        iconModifier = Modifier.padding(end = 20.dp),
                         onRetryClick = {
                             courtViewModel.getCourts()
                         }
                     )
                 }
+
             )
         }
 

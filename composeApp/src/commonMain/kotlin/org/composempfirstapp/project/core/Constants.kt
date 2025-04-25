@@ -21,7 +21,7 @@ import org.jetbrains.compose.resources.StringResource
 
 const val datastoreFileName = "setting.preferences_pb"
 
-const val BASE_URL = "https://s4xgqsvveu.sharedwithexpose.com/api/"
+const val BASE_URL = "https://g6oqfim2ie.sharedwithexpose.com/api/"
 
 
 

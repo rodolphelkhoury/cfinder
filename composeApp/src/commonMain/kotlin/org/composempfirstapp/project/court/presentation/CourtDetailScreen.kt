@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +32,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import cfinder.composeapp.generated.resources.Res
@@ -57,13 +61,20 @@ fun CourtDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(court.name) },
+                title = {
+                    Text(
+                        text = court.name,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
+
         }
     ) { paddingValues ->
         LazyColumn(
@@ -88,31 +99,16 @@ fun CourtDetailScreen(
                 )
             }
 
-            // Court Name
-            item {
-                Text(
-                    text = court.name,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-            }
 
-            // Court Rate
-            item {
-                Text(
-                    text = "Rate: ${court.hourlyRate} per hour",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
 
             // Court Description
             court.description?.let {
                 item {
                     Text(
-                        text = "About this court",
+                        text = "Description:",
+                        fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        color = MaterialTheme.colorScheme.primary
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -125,22 +121,40 @@ fun CourtDetailScreen(
                 }
             }
 
-            // Map section
+            // Court Price
             item {
-                Column {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle().copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )) {
+                            append("Price: ")
+                        }
+                        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                            append("${court.hourlyRate} $/ hour")
+                        }
+                    },
+                    modifier = Modifier.padding(bottom = 0.dp) // Minimal bottom padding
+                )
+            }
+
+
+            // Location Section
+            item {
+                Column(modifier = Modifier.padding(top = 0.dp)) { // Reduced top padding
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Location",
+                            text = "Location:",
+                            fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            color = MaterialTheme.colorScheme.primary
                         )
-
-                        // Open in Maps button
-                        OutlinedButton(
+                        TextButton(
                             onClick = {
                                 openInExternalMaps(context, court.latitude, court.longitude, court.name)
                             }
@@ -153,10 +167,6 @@ fun CourtDetailScreen(
                             Text("Open in Maps")
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Map component without click handling
                     CourtLocationMap(
                         latitude = court.latitude,
                         longitude = court.longitude,
@@ -166,8 +176,11 @@ fun CourtDetailScreen(
                             .height(200.dp)
                             .clip(RoundedCornerShape(8.dp))
                     )
+                    // Add padding between map and reserve button
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+
 
             // Reserve Button
             item {

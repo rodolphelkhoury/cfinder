@@ -32,12 +32,13 @@ fun AboutUsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Contact Us") },
+                title = { Text("Contact Us", color = MaterialTheme.colorScheme.primary,fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { rootNavController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+
                         )
                     }
                 }

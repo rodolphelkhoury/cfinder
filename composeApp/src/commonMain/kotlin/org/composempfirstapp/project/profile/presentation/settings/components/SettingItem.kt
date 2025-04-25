@@ -27,13 +27,14 @@ import org.composempfirstapp.project.core.theme.mediumPadding
 import org.composempfirstapp.project.core.theme.smallPadding
 import org.composempfirstapp.project.core.theme.xLargePadding
 
+
 @Composable
 fun SettingItem(
     onClick: () -> Unit,
     painter: Painter? = null,
     imageVector: ImageVector? = null,
     itemName: String,
-    itemColor: Color = MaterialTheme.colorScheme.onSurface,
+    itemColor: Color = MaterialTheme.colorScheme.primary, // Set default color to primary
     trailingContent: @Composable (() -> Unit)? = null
 ) {
     Surface(
@@ -52,17 +53,18 @@ fun SettingItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Display icon if present (imageVector or painter)
                 if (imageVector != null) {
                     Icon(
                         imageVector = imageVector,
                         contentDescription = null,
-                        tint = itemColor
+                        tint = itemColor // Use primary color for the icon
                     )
                 } else if (painter != null) {
                     Icon(
                         painter = painter,
                         contentDescription = null,
-                        tint = itemColor
+                        tint = itemColor // Use primary color for the icon
                     )
                 }
 
@@ -70,8 +72,8 @@ fun SettingItem(
 
                 Text(
                     text = itemName,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = itemColor
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold), // Make text bold
+                    color = itemColor // Use primary color for the text
                 )
             }
             if (trailingContent != null) {
