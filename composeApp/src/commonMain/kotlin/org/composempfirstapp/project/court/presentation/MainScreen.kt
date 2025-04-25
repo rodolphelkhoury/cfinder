@@ -34,7 +34,7 @@ fun MainScreen(
     ) }
 
     // Here we mock the notification count, you can replace this with dynamic data later.
-    val notificationCount = 3  // This is a static value for testing.
+    val notificationCount = 0  // This is a static value for testing.
 
     Scaffold(
         modifier = Modifier

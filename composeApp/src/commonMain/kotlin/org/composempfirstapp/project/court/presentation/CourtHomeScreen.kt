@@ -66,31 +66,6 @@ fun CourtHomeScreen(
                 .fillMaxSize()
                 .padding(top = 20.dp)
         ) {
-
-
-        ) {
-            // Header text
-            Column(modifier = Modifier.padding(horizontal = mediumPadding, vertical = mediumPadding)) {
-                Text(
-                    text = "CourtConnect",
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                )
-                Text(
-                    text = "Your Court, Anytime, Anywhere",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                )
-
-                // Inside the Column after the second Text
-                Spacer(modifier = Modifier.height(20.dp))
-
-            }
-
-
             // Search bar
             SearchBar(
                 text = searchQuery,
@@ -141,5 +116,3 @@ fun CourtHomeScreen(
         )
     }
 }
-
-
