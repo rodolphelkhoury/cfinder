@@ -37,6 +37,7 @@ import org.composempfirstapp.project.core.navigation.SettingRouteScreen
 import org.composempfirstapp.project.court.data.CourtRepository
 import org.composempfirstapp.project.court.presentation.CourtReservationScreen
 import org.composempfirstapp.project.court.presentation.CourtViewModel
+import org.composempfirstapp.project.court.presentation.NotificationScreen
 import org.composempfirstapp.project.profile.data.ProfileRepository
 import org.composempfirstapp.project.profile.presentation.ProfileViewModel
 import org.composempfirstapp.project.profile.presentation.SettingScreen
@@ -135,6 +136,9 @@ fun RootNavGraph(
                 SettingScreen(rootNavController, settingViewModel, authRepository)
             }
 
+            composable("notifications") {
+                           NotificationScreen(navController = rootNavController)
+                        }
             composable(route = CourtRouteScreen.CourtDetail.route) {
                 rootNavController.previousBackStackEntry?.savedStateHandle?.get<String>("court")?.let {
                     CourtDetailScreen(

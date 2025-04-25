@@ -8,16 +8,18 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier,
-    items : List<BottomNavigationItem>,
-    currentRoute : String?,
-    onItemClick : (BottomNavigationItem) -> Unit
+    items: List<BottomNavigationItem>,
+    currentRoute: String?,
+    onItemClick: (BottomNavigationItem) -> Unit
 ) {
     NavigationBar(
         modifier = Modifier.fillMaxWidth()
