@@ -58,7 +58,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.composempfirstapp.project.core.authentication.data.UiState
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun VerifyOtpScreen(
     navController: NavController,
