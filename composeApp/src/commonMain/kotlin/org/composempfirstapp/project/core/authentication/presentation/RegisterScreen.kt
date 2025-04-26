@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -215,8 +216,9 @@ fun RegisterScreen(
                                                 color = MaterialTheme.colorScheme.outline,
                                                 shape = RoundedCornerShape(8.dp)
                                             )
+                                            .height(52.dp)
                                             .clickable { showCountryDropdown = true }
-                                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                                            .padding(horizontal = 12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
@@ -231,7 +233,8 @@ fun RegisterScreen(
 
                                     DropdownMenu(
                                         expanded = showCountryDropdown,
-                                        onDismissRequest = { showCountryDropdown = false }
+                                        onDismissRequest = { showCountryDropdown = false },
+                                        modifier = Modifier.heightIn(max = 250.dp)
                                     ) {
                                         countryCodes.forEach { country ->
                                             DropdownMenuItem(
@@ -262,7 +265,7 @@ fun RegisterScreen(
                                     ),
                                     singleLine = true,
                                     isError = isPhoneNumberError,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth().height(52.dp)
                                 )
                             }
 
@@ -315,29 +318,6 @@ fun RegisterScreen(
                                     text = passwordErrorMessage,
                                     color = MaterialTheme.colorScheme.error,
                                     style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-                        }
-
-                        // Password requirements indicator when typing
-                        androidx.compose.animation.AnimatedVisibility(visible = password.isNotEmpty()) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(top = 4.dp)
-                            ) {
-                                Icon(
-                                    imageVector = if (isPasswordValid) Icons.Default.Check else Icons.Default.Close,
-                                    contentDescription = "Password requirement",
-                                    tint = if (isPasswordValid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                                    modifier = Modifier.size(16.dp)
-                                )
-
-                                Spacer(modifier = Modifier.width(4.dp))
-
-                                Text(
-                                    text = "At least 8 characters",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = if (isPasswordValid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }

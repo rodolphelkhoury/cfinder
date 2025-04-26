@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -69,7 +70,6 @@ import org.composempfirstapp.project.core.authentication.data.UiState
 import org.composempfirstapp.project.core.authentication.domain.countryCodes
 import org.composempfirstapp.project.core.navigation.AuthRoutes
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -81,6 +81,7 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var isPhoneNumberError by remember { mutableStateOf(false) }
     var isPasswordError by remember { mutableStateOf(false) }
+    var phoneNumberErrorMessage by remember { mutableStateOf("") }
     var passwordErrorMessage by remember { mutableStateOf("") }
     var showCountryDropdown by remember { mutableStateOf(false) }
     var selectedCountry by remember { mutableStateOf(countryCodes[0]) }
@@ -103,12 +104,31 @@ fun LoginScreen(
         if (loginState is UiState.Success) {
             onLoginSuccess()
         }
+
+        // Handle specific error messages
+        if (loginState is UiState.Error) {
+            val errorMessage = (loginState as UiState.Error).message
+            if (errorMessage.contains("phone number", ignoreCase = true)) {
+                isPhoneNumberError = true
+                phoneNumberErrorMessage = errorMessage
+                isPasswordError = false
+            } else if (errorMessage.contains("password", ignoreCase = true)) {
+                isPasswordError = true
+                passwordErrorMessage = errorMessage
+                isPhoneNumberError = false
+            }
+        }
     }
 
     // Reset errors when inputs change
-    LaunchedEffect(phoneNumber) { isPhoneNumberError = false }
+    LaunchedEffect(phoneNumber) {
+        isPhoneNumberError = false
+        phoneNumberErrorMessage = ""
+    }
+
     LaunchedEffect(password) {
         isPasswordError = false
+        passwordErrorMessage = ""
         if (password.isNotEmpty() && password.length < 8) {
             passwordErrorMessage = "Password must be at least 8 characters"
             isPasswordError = true
@@ -152,7 +172,7 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp) // Reduced from 16.dp to 12.dp
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         // Phone number with country code
                         Column {
@@ -174,11 +194,14 @@ fun LoginScreen(
                                         modifier = Modifier
                                             .border(
                                                 width = 1.dp,
-                                                color = MaterialTheme.colorScheme.outline,
+                                                color = if (isPhoneNumberError) MaterialTheme.colorScheme.error
+                                                else MaterialTheme.colorScheme.outline,
                                                 shape = RoundedCornerShape(8.dp)
                                             )
+                                            .height(52.dp)
                                             .clickable { showCountryDropdown = true }
-                                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                                            .padding(horizontal = 12.dp)
+                                            .align(Alignment.CenterStart),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
@@ -193,7 +216,8 @@ fun LoginScreen(
 
                                     DropdownMenu(
                                         expanded = showCountryDropdown,
-                                        onDismissRequest = { showCountryDropdown = false }
+                                        onDismissRequest = { showCountryDropdown = false },
+                                        modifier = Modifier.heightIn(max = 250.dp)
                                     ) {
                                         countryCodes.forEach { country ->
                                             DropdownMenuItem(
@@ -221,19 +245,20 @@ fun LoginScreen(
                                         imeAction = ImeAction.Next
                                     ),
                                     keyboardActions = KeyboardActions(
-                                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                                        onNext = { passwordFocusRequester.requestFocus() }
                                     ),
                                     singleLine = true,
                                     isError = isPhoneNumberError,
                                     modifier = Modifier
                                         .fillMaxWidth()
+                                        .height(52.dp)
                                         .focusRequester(phoneNumberFocusRequester)
                                 )
                             }
 
                             if (isPhoneNumberError) {
                                 Text(
-                                    text = "Please enter a valid phone number",
+                                    text = phoneNumberErrorMessage.ifEmpty { "Please enter a valid phone number" },
                                     color = MaterialTheme.colorScheme.error,
                                     style = MaterialTheme.typography.bodySmall,
                                 )
@@ -265,7 +290,10 @@ fun LoginScreen(
                                         if (phoneNumber.isNotBlank() && isPasswordValid) {
                                             authViewModel.login("${selectedCountry.code}$phoneNumber", password)
                                         } else {
-                                            if (phoneNumber.isBlank()) isPhoneNumberError = true
+                                            if (phoneNumber.isBlank()) {
+                                                isPhoneNumberError = true
+                                                phoneNumberErrorMessage = "Phone number is required"
+                                            }
                                             if (!isPasswordValid) {
                                                 isPasswordError = true
                                                 passwordErrorMessage = "Password must be at least 8 characters"
@@ -285,7 +313,7 @@ fun LoginScreen(
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(52.dp) // Made password input smaller (reduced from default)
+                                    .height(52.dp)
                                     .focusRequester(passwordFocusRequester)
                             )
 
@@ -298,56 +326,29 @@ fun LoginScreen(
                             }
                         }
 
-                        // Password requirements indicator when typing
-                        AnimatedVisibility(visible = password.isNotEmpty()) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(top = 2.dp) // Reduced from 4.dp
-                            ) {
-                                Icon(
-                                    imageVector = if (isPasswordValid) Icons.Default.Check else Icons.Default.Close,
-                                    contentDescription = "Password requirement",
-                                    tint = if (isPasswordValid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                                    modifier = Modifier.size(16.dp)
-                                )
-
-                                Spacer(modifier = Modifier.width(4.dp))
-
-                                Text(
-                                    text = "At least 8 characters",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = if (isPasswordValid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-
-                        if (loginState is UiState.Error) {
+                        // General error message that doesn't fit in either category
+                        if (loginState is UiState.Error && !isPhoneNumberError && !isPasswordError) {
                             Text(
                                 text = (loginState as UiState.Error).message,
                                 color = MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.padding(top = 2.dp) // Reduced from 4.dp
+                                modifier = Modifier.padding(top = 4.dp)
                             )
                         }
-
-                        // Reduced spacing by removing this spacer
-                        // Spacer(modifier = Modifier.height(1.dp))
 
                         TextButton(
                             onClick = { /* Handle forgot password */ },
                             modifier = Modifier
                                 .align(Alignment.End)
-                                .padding(top = 0.dp, bottom = 0.dp) // Reduced padding
                         ) {
                             Text("Forgot Password?")
                         }
-
-                        Spacer(modifier = Modifier.height(0.dp))
 
                         Button(
                             onClick = {
                                 if (phoneNumber.isBlank()) {
                                     isPhoneNumberError = true
+                                    phoneNumberErrorMessage = "Phone number is required"
                                 }
                                 if (password.isBlank()) {
                                     isPasswordError = true
