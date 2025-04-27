@@ -119,7 +119,7 @@ fun ReservationScreen(
                             if (reservationList.isEmpty()) {
                                 EmptyContent(
                                     message = stringResource(Res.string.no_reservations),
-                                    icon = Res.drawable.ic_network_error,
+                                    icon = Res.drawable.ic_browse,
                                     onRetryClick = {
                                         reservationViewModel.getReservations()
                                     }

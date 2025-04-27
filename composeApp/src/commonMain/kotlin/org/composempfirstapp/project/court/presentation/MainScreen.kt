@@ -23,6 +23,7 @@ import org.composempfirstapp.project.core.navigation.BottomNavigationBar
 import org.composempfirstapp.project.core.navigation.graphs.MainNavGraph
 import org.composempfirstapp.project.core.bottomNavigationList
 import org.composempfirstapp.project.core.components.TopBar
+import org.composempfirstapp.project.profile.presentation.ProfileViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,6 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 fun MainScreen(
     rootNavController: NavHostController,
     appPreferences: AppPreferences,
+    profileViewModel: ProfileViewModel,
     modifier: Modifier = Modifier,
 ) {
     val homeNavContrller = rememberNavController()
@@ -73,7 +75,8 @@ fun MainScreen(
             rootNavController,
             homeNavContrller,
             it,
-            appPreferences
+            appPreferences,
+            profileViewModel
         )
     }
 }

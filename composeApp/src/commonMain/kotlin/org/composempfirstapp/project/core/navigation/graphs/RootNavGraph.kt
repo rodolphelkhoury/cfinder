@@ -57,10 +57,12 @@ fun RootNavGraph(
     val authViewModel = viewModel { AuthViewModel(authRepository) }
     val courtViewModel = viewModel { CourtViewModel(CourtRepository(appPreferences)) }
     val profileRepository = remember { ProfileRepository(appPreferences) }
-    val profileViewModel = viewModel { ProfileViewModel(profileRepository) }
+    val profileViewModel = remember { ProfileViewModel(profileRepository) }
 
     var startDestination by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(true) }
+
+
 
     // Check if user is logged in and phone is verified
     LaunchedEffect(Unit) {
@@ -128,7 +130,7 @@ fun RootNavGraph(
 
             // Main graph
             composable(route = Graph.MainScreenGraph) {
-                MainScreen(rootNavController, appPreferences)
+                MainScreen(rootNavController, appPreferences, profileViewModel)
             }
 
             composable(route = SettingRouteScreen.Setting.route) {
@@ -173,7 +175,7 @@ fun RootNavGraph(
             }
 
             composable(ProfileRouteScreen.MyProfile.route) {
-                MyProfileScreen(rootNavController)
+                MyProfileScreen(rootNavController, profileViewModel)
             }
             composable(ProfileRouteScreen.MyCourts.route) {
                 MyCourtsScreen(

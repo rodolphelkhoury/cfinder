@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,15 +39,10 @@ import org.composempfirstapp.project.profile.domain.Profile
 fun ProfileScreen(
     rootNavController: NavHostController,
     // Get viewModel as parameter instead of reading from global state
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel = viewModel()
 ) {
     // Use state flow from viewModel
     val profileState by profileViewModel.profile.collectAsState()
-
-    // Extract profile data when available
-    val profile = (profileState as? Resource.Success)?.data
-    val fullName = profile?.name ?: ""
-    val phoneNumber = profile?.phoneNumber ?: ""
 
     Column(
         modifier = Modifier
@@ -59,45 +55,68 @@ fun ProfileScreen(
             )
             .verticalScroll(rememberScrollState())
     ) {
-        // Profile header with full name
-        ProfileHeader(
-            name = fullName,
-            phoneNumber = phoneNumber
-        )
+        when (profileState) {
+            is Resource.Success -> {
+                val profile = (profileState as Resource.Success<Profile>).data
 
-        Spacer(modifier = Modifier.height(32.dp))
+                // Profile header with full name
+                ProfileHeader(
+                    name = profile.name,
+                    phoneNumber = profile.phoneNumber
+                )
 
-        // Navigation items - pass profile data to destinations
-        ProfileNavigationItem(
-            title = "My Profile",
-            onClick = {
-                // Pass profile data as navigation arguments
-                val profileJson = Json.encodeToString(profile)
-                rootNavController.currentBackStackEntry?.savedStateHandle?.set("profile", profileJson)
-                rootNavController.navigate(ProfileRouteScreen.MyProfile.route)
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Navigation items
+                ProfileNavigationItem(
+                    title = "My Profile",
+                    onClick = {
+                        // No need to pass profile data as navigation arguments
+                        // The MyProfileScreen will use the shared ViewModel
+                        rootNavController.navigate(ProfileRouteScreen.MyProfile.route)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ProfileNavigationItem(
+                    title = "My Courts",
+                    onClick = { rootNavController.navigate(ProfileRouteScreen.MyCourts.route) }
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ProfileNavigationItem(
+                    title = "Settings",
+                    onClick = { rootNavController.navigate(ProfileRouteScreen.Settings.route) }
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ProfileNavigationItem(
+                    title = "About us",
+                    onClick = { rootNavController.navigate(ProfileRouteScreen.AboutUs.route) }
+                )
             }
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        ProfileNavigationItem(
-            title = "My Courts",
-            onClick = { rootNavController.navigate(ProfileRouteScreen.MyCourts.route) }
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        ProfileNavigationItem(
-            title = "Settings",
-            onClick = { rootNavController.navigate(ProfileRouteScreen.Settings.route) }
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        ProfileNavigationItem(
-            title = "About us",
-            onClick = { rootNavController.navigate(ProfileRouteScreen.AboutUs.route) }
-        )
+            is Resource.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            is Resource.Error -> {
+                val errorMessage = (profileState as Resource.Error).message
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Error: $errorMessage")
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(onClick = { profileViewModel.getProfile() }) {
+                            Text("Retry")
+                        }
+                    }
+                }
+            }
+            else -> { /* Handle Idle state if needed */ }
+        }
     }
 }
 
