@@ -13,14 +13,12 @@ import cfinder.composeapp.generated.resources.light_mode
 import cfinder.composeapp.generated.resources.person
 import cfinder.composeapp.generated.resources.profile
 import cfinder.composeapp.generated.resources.system_default
-import org.composempfirstapp.project.court.data.CourtsResponse
-import org.composempfirstapp.project.court.domain.Court
 import org.composempfirstapp.project.core.navigation.BottomNavigationItem
 import org.composempfirstapp.project.core.navigation.MainRouteScreen
 import org.jetbrains.compose.resources.StringResource
 
 const val datastoreFileName = "setting.preferences_pb"
-const val BASE_URL = "https://aedhvgmorh.sharedwithexpose.com/api/"
+const val BASE_URL = "https://rutqh3txla.sharedwithexpose.com/api/"
 
 enum class Theme(val title: StringResource) {
     SYSTEM_DEFAULT(Res.string.system_default),

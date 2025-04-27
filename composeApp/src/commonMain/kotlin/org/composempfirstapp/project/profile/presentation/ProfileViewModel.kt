@@ -4,13 +4,20 @@ package org.composempfirstapp.project.profile.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.ktor.client.call.body
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.composempfirstapp.project.court.domain.Court
 import org.composempfirstapp.project.core.Resource
+import org.composempfirstapp.project.court.data.ErrorResponse
 import org.composempfirstapp.project.profile.data.ProfileErrorResponse
 import org.composempfirstapp.project.profile.data.ProfileRepository
 import org.composempfirstapp.project.profile.data.ProfileResponse
@@ -27,6 +34,10 @@ class ProfileViewModel(
     private val _profile = MutableStateFlow<Resource<Profile>>(Resource.Idle)
     val profile: StateFlow<Resource<Profile>>
         get() = _profile
+
+    private val _updateProfileState = MutableStateFlow<Resource<Unit>>(Resource.Idle)
+    val updateProfileState: StateFlow<Resource<Unit>> = _updateProfileState
+
 
     // Add updateable profile state
     private val _fullName = MutableStateFlow("")
@@ -53,29 +64,64 @@ class ProfileViewModel(
                     _fullName.emit(profile.name)
                     _phoneNumber.emit(profile.phoneNumber)
                 } else {
-                    val body = httpResponse.body<ProfileErrorResponse>()
-                    _profile.emit(Resource.Error(body.message))
+                    val errorBody = httpResponse.bodyAsText()
+                    val errorMessage = parseErrorMessage(errorBody)
+                    _profile.emit(Resource.Error(errorMessage))
                 }
             } catch (e: Exception) {
-                _profile.emit(Resource.Error(e.message.toString()))
+                _profile.emit(Resource.Error(e.message ?: "Unknown error occurred"))
             }
         }
     }
 
-    // Add update profile function that calls repository
+
     fun updateProfile(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _updateProfileState.emit(Resource.Loading)
             try {
-                val response = profileRepository.updateProfile(name)
-                if (response.status.value in 200..299) {
-                    _fullName.emit(name)
-                    // Refresh profile data
-                    getProfile()
+                val httpResponse = profileRepository.updateProfile(name)
+                if (httpResponse.status.value in 200..299) {
+                    // Parse the response directly
+                    val body = httpResponse.body<ProfileUpdateResponse>()
+                    val updatedProfile = body.customer.toProfile()
+
+                    // Update all relevant states at once
+                    _fullName.emit(updatedProfile.name)
+                    _phoneNumber.emit(updatedProfile.phoneNumber)
+
+                    // Update the main profile state too
+                    _profile.emit(Resource.Success(updatedProfile))
+                    _updateProfileState.emit(Resource.Success(Unit))
+                } else {
+                    val errorBody = httpResponse.bodyAsText()
+                    val errorMessage = parseErrorMessage(errorBody)
+                    _updateProfileState.emit(Resource.Error(errorMessage))
                 }
             } catch (e: Exception) {
-                // Handle error
+                _updateProfileState.emit(Resource.Error(e.message ?: "Unknown error occurred"))
+            }
+        }
+    }
+
+
+    private fun parseErrorMessage(errorBody: String): String {
+        return try {
+            val errorJson = Json.decodeFromString<ErrorResponse>(errorBody)
+            errorJson.message ?: "Unknown error occurred"
+        } catch (e: Exception) {
+            try {
+                val jsonElement = Json.parseToJsonElement(errorBody)
+                val messageElement = jsonElement.jsonObject["message"]
+                messageElement?.jsonPrimitive?.contentOrNull ?: "Unknown error occurred"
+            } catch (e2: Exception) {
+                "Error occurred during profile operation"
             }
         }
     }
 }
 
+@Serializable
+data class ProfileUpdateResponse(
+    val message: String,
+    val customer: ProfileResponse
+)

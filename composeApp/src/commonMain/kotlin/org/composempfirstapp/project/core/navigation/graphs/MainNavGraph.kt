@@ -25,11 +25,9 @@ fun MainNavGraph(
     homeNavHostController: NavHostController,
     paddingValues: PaddingValues,
     appPreferences: AppPreferences,
+    profileViewModel: ProfileViewModel,
     modifier: Modifier = Modifier
 ) {
-    // Create ProfileRepository and ProfileViewModel instances
-    val profileRepository = remember { ProfileRepository(appPreferences) }
-    val profileViewModel: ProfileViewModel = viewModel { ProfileViewModel(profileRepository) }
 
     NavHost(
         modifier = Modifier

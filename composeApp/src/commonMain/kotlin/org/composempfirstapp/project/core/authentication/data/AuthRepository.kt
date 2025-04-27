@@ -197,5 +197,39 @@ class AuthRepository(
     suspend fun logout() {
         appPreferences.clearToken()
     }
+
+    suspend fun resendOtp(): Result<Boolean> {
+        return try {
+            val token = appPreferences.getToken()
+            if (token == null) {
+                return Result.failure(Exception("Authentication token not found. Please login again."))
+            }
+
+            val response = httpClient.post {
+                url("resend-otp")
+                header(HttpHeaders.Authorization, "Bearer $token")
+            }
+
+            if (response.status.isSuccess()) {
+                Result.success(true)
+            } else {
+                val errorText = response.bodyAsText()
+                Result.failure(Exception(parseErrorMessage(errorText)))
+            }
+        } catch (e: ClientRequestException) {
+            try {
+                val errorBody = e.response.bodyAsText()
+                val errorMessage = parseErrorMessage(errorBody)
+                Result.failure(Exception(errorMessage))
+            } catch (parseException: Exception) {
+                Logger.e("Auth Error") { "Error parsing response: ${parseException.message}" }
+                Result.failure(e)
+            }
+        } catch (e: Exception) {
+            // Log the exception for debugging
+            Logger.e("Auth Error") { "Resend OTP error: ${e.message}" }
+            Result.failure(e)
+        }
+    }
 }
 
