@@ -20,7 +20,7 @@ import org.composempfirstapp.project.core.navigation.MainRouteScreen
 import org.jetbrains.compose.resources.StringResource
 
 const val datastoreFileName = "setting.preferences_pb"
-const val BASE_URL = "https://dxvaccfedu.sharedwithexpose.com/api/"
+const val BASE_URL = "https://gobadoo0ll.sharedwithexpose.com/api/"
 
 enum class Theme(val title: StringResource) {
     SYSTEM_DEFAULT(Res.string.system_default),
