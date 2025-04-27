@@ -1,5 +1,7 @@
 package org.composempfirstapp.project.court.presentation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -20,6 +22,7 @@ import org.composempfirstapp.project.core.AppPreferences
 import org.composempfirstapp.project.core.navigation.BottomNavigationBar
 import org.composempfirstapp.project.core.navigation.graphs.MainNavGraph
 import org.composempfirstapp.project.core.bottomNavigationList
+import org.composempfirstapp.project.core.components.TopBar
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,29 +40,15 @@ fun MainScreen(
         navBackStackEntry?.destination?.route
     ) }
 
-    val topBarTitle by remember(currentRoute) {
-        derivedStateOf {
-            if (currentRoute != null) {
-                bottomNavigationList[bottomNavigationList.indexOfFirst {
-                    it.route == currentRoute
-                }].title
-            } else {
-                bottomNavigationList[0].title
-            }
-        }
-    }
 
     Scaffold(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        containerColor = MaterialTheme.colorScheme.background,  // Automatically adapts to dark/light theme
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(topBarTitle),
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
+            TopBar(
+
             )
         },
         bottomBar = {

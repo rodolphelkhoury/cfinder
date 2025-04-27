@@ -130,7 +130,16 @@ fun CourtReservationScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Reserve Court") },
+                title = {
+                    Text(
+                        text = "Reserve ${court.name}",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+                    )
+                }
+                ,
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -145,17 +154,13 @@ fun CourtReservationScreen(
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            Text(
-                text = "Reserve ${court.name}",
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
 
             // Calendar section
             Text(
                 text = "Select Date",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
@@ -197,7 +202,8 @@ fun CourtReservationScreen(
                     Text(
                         text = day,
                         modifier = Modifier.padding(4.dp),
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+//                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
@@ -266,8 +272,10 @@ fun CourtReservationScreen(
                 text = "Available Times for ${formatDate(selectedDate.value)}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
+
 
             // Available time slots section
             when (timeSlotsState) {

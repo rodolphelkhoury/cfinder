@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,7 +48,7 @@ fun MyProfileScreen(rootNavController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Profile") },
+                title = { Text("My Profile", color = MaterialTheme.colorScheme.primary,fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { rootNavController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
