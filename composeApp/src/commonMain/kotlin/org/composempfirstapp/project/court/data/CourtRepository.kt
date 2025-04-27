@@ -58,7 +58,7 @@ class CourtRepository(
         }
     }
 
-    suspend fun getCourts(searchQuery: String = ""): HttpResponse {
+    suspend fun getCourts(searchQuery: String = "", courtType: String = ""): HttpResponse {
         val token = appPreferences.getToken()
 
         return httpClient.get {
@@ -70,6 +70,10 @@ class CourtRepository(
 
             if (searchQuery.isNotEmpty()) {
                 parameter("search", searchQuery)
+            }
+
+            if (courtType.isNotEmpty()) {
+                parameter("court_type", courtType)
             }
         }
     }

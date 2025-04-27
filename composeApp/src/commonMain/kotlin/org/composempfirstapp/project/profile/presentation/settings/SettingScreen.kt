@@ -100,9 +100,10 @@ fun SettingScreen(
             TopAppBar(
                 title = {
                     Text(
-                        stringResource(
+                        text = stringResource(
                             Res.string.settings
-                        )
+                        ),
+                        color = MaterialTheme.colorScheme.primary
                     )
                 },
                 navigationIcon = {
@@ -132,7 +133,7 @@ fun SettingScreen(
                         showSelectThemeDialog = true
                     },
                     painter = painterResource(Res.drawable.ic_light_mode),
-                    itemName = stringResource(Res.string.theme)
+                    itemName = stringResource(Res.string.theme),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }

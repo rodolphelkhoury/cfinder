@@ -1,28 +1,25 @@
 package org.composempfirstapp.project.reservation.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cfinder.composeapp.generated.resources.Res
 import cfinder.composeapp.generated.resources.ic_delete
-import coil3.compose.AsyncImage
-import org.composempfirstapp.project.core.theme.imageSize
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Month
 import org.composempfirstapp.project.reservation.domain.Reservation
 import org.jetbrains.compose.resources.painterResource
 
@@ -47,15 +44,6 @@ fun ReservationComponent(
                 .padding(20.dp),
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .size(imageSize)
-                    .clip(MaterialTheme.shapes.large)
-                    .background(Color.Gray),
-                model = reservation.court?.imageUrl,
-                error = painterResource(Res.drawable.ic_delete),
-                contentDescription = null
-            )
 
             Column(
                 modifier = Modifier.weight(1f),
@@ -71,9 +59,9 @@ fun ReservationComponent(
                     maxLines = 2
                 )
 
-                // Date
+                // Date with full format
                 Text(
-                    text = reservation.reservationDate,
+                    text = formatFullDate(reservation.reservationDate),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
@@ -81,7 +69,7 @@ fun ReservationComponent(
 
                 // Time
                 Text(
-                    text = "${reservation.startTime} - ${reservation.endTime}",
+                    text = "${formatTimeWithAMPM(reservation.startTime)} - ${formatTimeWithAMPM(reservation.endTime)}",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
@@ -89,7 +77,7 @@ fun ReservationComponent(
 
                 // Price
                 Text(
-                    text = "$${reservation.totalPrice}$/ hour",
+                    text = "$${reservation.totalPrice}$",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
@@ -104,5 +92,72 @@ fun ReservationComponent(
                 )
             }
         }
+    }
+}
+
+private fun formatTimeWithAMPM(time: String): String {
+    val parts = time.split(":")
+    if (parts.size < 2) return time
+
+    val hour = parts[0].toIntOrNull() ?: return time
+    val minute = parts[1]
+
+    val amPm = if (hour < 12) "AM" else "PM"
+    val hour12 = when {
+        hour == 0 -> 12
+        hour > 12 -> hour - 12
+        else -> hour
+    }
+
+    return "$hour12:$minute $amPm"
+}
+
+private fun formatFullDate(dateString: String): String {
+    try {
+        val dateParts = dateString.split("-")
+        if (dateParts.size != 3) return dateString
+
+        val year = dateParts[0].toIntOrNull() ?: return dateString
+        val month = dateParts[1].toIntOrNull() ?: return dateString
+        val day = dateParts[2].toIntOrNull() ?: return dateString
+
+        val date = LocalDate(year, month, day)
+        val dayOfWeek = getDayName(date.dayOfWeek)
+        val monthName = getMonthName(date.month)
+
+        return "$dayOfWeek, $monthName $day, $year"
+    } catch (e: Exception) {
+        return dateString
+    }
+}
+
+private fun getDayName(dayOfWeek: DayOfWeek): String {
+    return when (dayOfWeek) {
+        DayOfWeek.MONDAY -> "Monday"
+        DayOfWeek.TUESDAY -> "Tuesday"
+        DayOfWeek.WEDNESDAY -> "Wednesday"
+        DayOfWeek.THURSDAY -> "Thursday"
+        DayOfWeek.FRIDAY -> "Friday"
+        DayOfWeek.SATURDAY -> "Saturday"
+        DayOfWeek.SUNDAY -> "Sunday"
+        else -> "Unknown"
+    }
+}
+
+private fun getMonthName(month: Month): String {
+    return when (month) {
+        Month.JANUARY -> "January"
+        Month.FEBRUARY -> "February"
+        Month.MARCH -> "March"
+        Month.APRIL -> "April"
+        Month.MAY -> "May"
+        Month.JUNE -> "June"
+        Month.JULY -> "July"
+        Month.AUGUST -> "August"
+        Month.SEPTEMBER -> "September"
+        Month.OCTOBER -> "October"
+        Month.NOVEMBER -> "November"
+        Month.DECEMBER -> "December"
+        else -> "Unknown"
     }
 }
