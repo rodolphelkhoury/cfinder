@@ -52,4 +52,7 @@ data class Court(
 
     @SerialName("latitude")
     val latitude: Double,
+
+    @SerialName("address_line")
+    val addressLine: String?,
 )

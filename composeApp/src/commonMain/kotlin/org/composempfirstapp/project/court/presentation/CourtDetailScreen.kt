@@ -149,11 +149,29 @@ fun CourtDetailScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Location:",
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
+                            buildAnnotatedString {
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = MaterialTheme.typography.titleMedium.fontSize
+                                    )
+                                ) {
+                                    append("Location: ")
+                                }
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = MaterialTheme.typography.bodySmall.fontSize
+                                    )
+                                ) {
+                                    append(court.addressLine)
+                                }
+                            },
+                            style = MaterialTheme.typography.titleMedium
                         )
+
                         TextButton(
                             onClick = {
                                 openInExternalMaps(context, court.latitude, court.longitude, court.name)
