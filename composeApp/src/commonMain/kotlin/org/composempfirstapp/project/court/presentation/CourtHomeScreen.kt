@@ -161,7 +161,7 @@ fun CourtHomeScreen(
                     if (courtList.isEmpty()) {
                         EmptyContent(
                             message = stringResource(Res.string.no_courts),
-                            icon = Res.drawable.ic_network_error,
+                            icon = Res.drawable.ic_browse,
                             iconModifier = Modifier.padding(end = 12.dp),
                             onRetryClick = {
                                 courtViewModel.getCourts(searchQuery, courtTypeFilter)

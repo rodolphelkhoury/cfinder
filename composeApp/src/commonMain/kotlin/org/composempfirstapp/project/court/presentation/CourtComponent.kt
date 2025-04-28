@@ -87,6 +87,13 @@ fun CourtComponent(
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
+
+                Text(
+                    text = "${court.addressLine}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
