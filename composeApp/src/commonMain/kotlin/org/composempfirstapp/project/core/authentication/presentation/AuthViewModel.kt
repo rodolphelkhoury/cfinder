@@ -2,9 +2,17 @@ package org.composempfirstapp.project.core.authentication.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.ServerResponseException
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.composempfirstapp.project.core.authentication.data.AuthRepository
 import org.composempfirstapp.project.core.authentication.data.AuthResponse
 import org.composempfirstapp.project.core.authentication.data.UiState
@@ -20,6 +28,10 @@ class AuthViewModel(
 
     private val _verifyOtpState = MutableStateFlow<UiState<Boolean>>(UiState.Initial)
     val verifyOtpState = _verifyOtpState.asStateFlow()
+
+    // Add state for resend OTP
+    private val _resendOtpState = MutableStateFlow<UiState<Boolean>>(UiState.Initial)
+    val resendOtpState = _resendOtpState.asStateFlow()
 
     fun login(phoneNumber: String, password: String) {
         _loginState.value = UiState.Loading
@@ -54,9 +66,22 @@ class AuthViewModel(
         }
     }
 
+    // Add function to resend OTP
+    fun resendOtp() {
+        _resendOtpState.value = UiState.Loading
+        viewModelScope.launch {
+            val result = authRepository.resendOtp()
+            _resendOtpState.value = result.fold(
+                onSuccess = { UiState.Success(it) },
+                onFailure = { UiState.Error(it.message ?: "Failed to resend verification code") }
+            )
+        }
+    }
+
     fun resetStates() {
         _loginState.value = UiState.Initial
         _registerState.value = UiState.Initial
         _verifyOtpState.value = UiState.Initial
+        _resendOtpState.value = UiState.Initial
     }
 }

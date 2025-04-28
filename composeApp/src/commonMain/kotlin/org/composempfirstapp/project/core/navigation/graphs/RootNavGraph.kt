@@ -31,12 +31,18 @@ import org.composempfirstapp.project.court.presentation.CourtDetailScreen
 import org.composempfirstapp.project.court.presentation.MainScreen
 import org.composempfirstapp.project.core.navigation.CourtRouteScreen
 import org.composempfirstapp.project.core.navigation.Graph
+import org.composempfirstapp.project.core.navigation.ProfileRouteScreen
 import org.composempfirstapp.project.core.navigation.ReservationRouteScreen
 import org.composempfirstapp.project.core.navigation.SettingRouteScreen
 import org.composempfirstapp.project.court.data.CourtRepository
 import org.composempfirstapp.project.court.presentation.CourtReservationScreen
 import org.composempfirstapp.project.court.presentation.CourtViewModel
+import org.composempfirstapp.project.profile.data.ProfileRepository
+import org.composempfirstapp.project.profile.presentation.ProfileViewModel
 import org.composempfirstapp.project.profile.presentation.SettingScreen
+import org.composempfirstapp.project.profile.presentation.aboutus.AboutUsScreen
+import org.composempfirstapp.project.profile.presentation.mycourts.MyCourtsScreen
+import org.composempfirstapp.project.profile.presentation.myprofilescreen.MyProfileScreen
 import org.composempfirstapp.project.profile.presentation.settings.SettingViewModel
 import org.composempfirstapp.project.reservation.presentation.ReservationDetailScreen
 
@@ -50,9 +56,13 @@ fun RootNavGraph(
     val authRepository = remember { AuthRepository(appPreferences) }
     val authViewModel = viewModel { AuthViewModel(authRepository) }
     val courtViewModel = viewModel { CourtViewModel(CourtRepository(appPreferences)) }
+    val profileRepository = remember { ProfileRepository(appPreferences) }
+    val profileViewModel = remember { ProfileViewModel(profileRepository) }
 
     var startDestination by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(true) }
+
+
 
     // Check if user is logged in and phone is verified
     LaunchedEffect(Unit) {
@@ -120,11 +130,11 @@ fun RootNavGraph(
 
             // Main graph
             composable(route = Graph.MainScreenGraph) {
-                MainScreen(rootNavController, appPreferences)
+                MainScreen(rootNavController, appPreferences, profileViewModel)
             }
 
             composable(route = SettingRouteScreen.Setting.route) {
-                SettingScreen(rootNavController, settingViewModel)
+                SettingScreen(rootNavController, settingViewModel, authRepository)
             }
 
             composable(route = CourtRouteScreen.CourtDetail.route) {
@@ -162,6 +172,25 @@ fun RootNavGraph(
                         }
                     }
                 }
+            }
+
+            composable(ProfileRouteScreen.MyProfile.route) {
+                MyProfileScreen(rootNavController, profileViewModel)
+            }
+            composable(ProfileRouteScreen.MyCourts.route) {
+                MyCourtsScreen(
+                    rootNavController
+                )
+            }
+            composable(ProfileRouteScreen.Settings.route) {
+                SettingScreen(
+                    rootNavController,
+                    settingViewModel,
+                    authRepository
+                )
+            }
+            composable(ProfileRouteScreen.AboutUs.route) {
+                AboutUsScreen(rootNavController)
             }
         }
     }

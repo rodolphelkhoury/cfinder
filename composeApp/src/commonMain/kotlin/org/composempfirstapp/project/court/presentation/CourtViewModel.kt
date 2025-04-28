@@ -28,40 +28,58 @@ class CourtViewModel(
     val availableTimeSlotsFlow: StateFlow<Resource<List<TimeSlot>>>
         get() = _availableTimeSlotsFlow
 
-    // Set proper initial state to Idle
     private val _reservationStatus = MutableStateFlow<Resource<AvailableReservationsResponse>>(Resource.Idle)
     val reservationStatus: StateFlow<Resource<AvailableReservationsResponse>> = _reservationStatus
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
 
+    // Add a new state for court type filter
+    private val _courtTypeFilter = MutableStateFlow("")
+    val courtTypeFilter: StateFlow<String> = _courtTypeFilter
+
+    // Add a state to track available court types
+    private val _availableCourtTypes = MutableStateFlow<List<String>>(emptyList())
+    val availableCourtTypes: StateFlow<List<String>> = _availableCourtTypes
+
     init {
         getCourts()
     }
 
-    // Add reset function using Idle state
     fun resetReservationStatus() {
         _reservationStatus.value = Resource.Idle
     }
 
-    // Add function to update time slots directly
     fun updateAvailableTimeSlots(slots: List<TimeSlot>) {
         _availableTimeSlotsFlow.value = Resource.Success(slots)
     }
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
-        getCourts(query)
+        getCourts(query, _courtTypeFilter.value)
     }
 
-    fun getCourts(query: String = _searchQuery.value) {
+    // Add function to update court type filter
+    fun updateCourtTypeFilter(courtType: String) {
+        _courtTypeFilter.value = courtType
+        getCourts(_searchQuery.value, courtType)
+    }
+
+    // Extract court types from the court list
+    private fun extractCourtTypes(courts: List<Court>) {
+        val courtTypes = courts.map { it.courtType }.distinct()
+        _availableCourtTypes.value = courtTypes
+    }
+
+    fun getCourts(query: String = _searchQuery.value, courtType: String = _courtTypeFilter.value) {
         viewModelScope.launch(Dispatchers.IO) {
             _courtStateFlow.emit(Resource.Loading)
             try {
-                val httpResponse = courtRepository.getCourts(query)
+                val httpResponse = courtRepository.getCourts(query, courtType)
                 if (httpResponse.status.value in 200 .. 299) {
                     val body = httpResponse.body<CourtsResponse>()
                     _courtStateFlow.emit(Resource.Success(body.courts))
+                    extractCourtTypes(body.courts)
                 } else {
                     val body = httpResponse.body<ErrorResponse>()
                     _courtStateFlow.emit(Resource.Error(body.message))

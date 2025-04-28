@@ -33,6 +33,8 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import org.composempfirstapp.project.core.Resource
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -79,12 +81,24 @@ fun ReservationScreen(
             Tab(
                 selected = selectedTabIndex == 0,
                 onClick = { selectedTabIndex = 0 },
-                text = { Text("Upcoming") }
+                text = {
+                    Text(
+                        text = "Upcoming",
+                        fontSize = 18.sp, // Adjust font size here
+                        fontWeight = FontWeight.Bold // Optional: Make it bold
+                    )
+                }
             )
             Tab(
                 selected = selectedTabIndex == 1,
                 onClick = { selectedTabIndex = 1 },
-                text = { Text("Completed") }
+                text = {
+                    Text(
+                        text = "Completed",
+                        fontSize = 18.sp, // Adjust font size here
+                        fontWeight = FontWeight.Bold // Optional: Make it bold
+                    )
+                }
             )
         }
 
@@ -105,7 +119,7 @@ fun ReservationScreen(
                             if (reservationList.isEmpty()) {
                                 EmptyContent(
                                     message = stringResource(Res.string.no_reservations),
-                                    icon = Res.drawable.ic_network_error,
+                                    icon = Res.drawable.ic_browse,
                                     onRetryClick = {
                                         reservationViewModel.getReservations()
                                     }
@@ -138,7 +152,7 @@ fun ReservationScreen(
                             if (reservationList.isEmpty()) {
                                 EmptyContent(
                                     message = stringResource(Res.string.no_reservations),
-                                    icon = Res.drawable.ic_network_error,
+                                    icon = Res.drawable.ic_browse,
                                     onRetryClick = {
                                         reservationViewModel.getReservations()
                                     }

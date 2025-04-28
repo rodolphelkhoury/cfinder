@@ -30,3 +30,10 @@ sealed class ReservationRouteScreen(var route: String) {
     object ReservationDetail : ReservationRouteScreen("reservationDetail")
     object CourtReservation : ReservationRouteScreen("courtReservation")
 }
+
+sealed class ProfileRouteScreen(val route: String) {
+    object MyProfile : ProfileRouteScreen("myProfile")
+    object MyCourts  : ProfileRouteScreen("myCourts")
+    object Settings  : ProfileRouteScreen("settings")
+    object AboutUs   : ProfileRouteScreen("aboutus")
+}

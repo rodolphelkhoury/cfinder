@@ -1,48 +1,40 @@
 package org.composempfirstapp.project.reservation.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import cfinder.composeapp.generated.resources.Res
-import cfinder.composeapp.generated.resources.court_details
-import cfinder.composeapp.generated.resources.ic_bookmark_outlined
-import cfinder.composeapp.generated.resources.ic_browse
-import cfinder.composeapp.generated.resources.logo
+import cfinder.composeapp.generated.resources.*
 import coil3.compose.AsyncImage
-import org.composempfirstapp.project.shareLink
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
+import org.composempfirstapp.project.CourtLocationMap
 import org.composempfirstapp.project.core.theme.detailImageSize
 import org.composempfirstapp.project.core.theme.mediumPadding
 import org.composempfirstapp.project.core.theme.xLargePadding
+import org.composempfirstapp.project.openInExternalMaps
 import org.composempfirstapp.project.reservation.domain.Reservation
+import org.composempfirstapp.project.shareLink
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -50,30 +42,30 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ReservationDetailScreen(
     navController: NavController,
-    currentReservation: Reservation
+    currentReservation: Reservation,
 ) {
+    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val currentCourt = currentReservation.court ?: return
+
+
+    var snackbarMessage by remember { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        stringResource(
-                            Res.string.court_details
-                        ),
+                        "Reservation",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.primary
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(Res.string.court_details)
@@ -82,150 +74,194 @@ fun ReservationDetailScreen(
                 },
                 actions = {
                     currentCourt.imageUrl?.let {
-                        IconButton(
-                            onClick = {
-                                shareLink(it)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Share,
-                                contentDescription = "Share"
-                            )
+                        IconButton(onClick = { shareLink(it) }) {
+                            Icon(Icons.Filled.Share,
+                                contentDescription = "Share",
+                                tint = MaterialTheme.colorScheme.primary)
                         }
+
+//                        IconButton(onClick = { uriHandler.openUri(it) }) {
+//                            Icon(
+//                                painter = painterResource(Res.drawable.ic_browse),
+//                                contentDescription = "Open in browser",
+//                                tint = MaterialTheme.colorScheme.primary
+//                            )
+//                        }
                     }
-                    currentCourt.imageUrl?.let {
-                        IconButton(
-                            onClick = {
-                                uriHandler.openUri(it)
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_browse),
-                                contentDescription = "Open in browser"
-                            )
-                        }
-                    }
-                    IconButton(
-                        onClick = {
-                            // Bookmark functionality would be implemented here
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_bookmark_outlined),
-                            contentDescription = "Bookmark"
-                        )
-                    }
+
                 }
             )
-        }
-    ) { innerPadding ->
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            contentPadding = PaddingValues(xLargePadding),
-            verticalArrangement = Arrangement.spacedBy(xLargePadding)
+                .padding(padding)
+                .padding(horizontal = mediumPadding, vertical = xLargePadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Display reservation details
             item {
                 AsyncImage(
-                    modifier = Modifier
-                        .height(detailImageSize)
-                        .clip(MaterialTheme.shapes.large)
-                        .background(Color.Gray)
-                        .fillMaxWidth(),
                     model = currentCourt.imageUrl,
                     error = painterResource(Res.drawable.logo),
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    contentDescription = null
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(detailImageSize)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(Color.Gray)
                 )
             }
+
             item {
                 Text(
                     text = currentCourt.name,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
             currentCourt.description?.let {
                 item {
                     Text(
+                        text = "Description:",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
                         text = it,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.secondary
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
+            // Group time, price, and date with minimal spacing
             item {
-                Text(
-                    text = currentReservation.totalPrice.toString() + currentCourt.hourlyRate.toString(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-
-            // Add reservation-specific details
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Column(
-                        modifier = Modifier.padding(mediumPadding)
-                    ) {
-                        Text(
-                            // TODO
-                            text = "Details",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(currentReservation.reservationDate.toString())
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = MaterialTheme.typography.titleMedium.toSpanStyle().copy(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append("Date: ")
+                            }
+                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                                append(formatFullDate(currentReservation.reservationDate))
+                            }
                         }
+                    )
 
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Time")
-                            Text("${currentReservation.startTime} - ${currentReservation.endTime}")
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = MaterialTheme.typography.titleMedium.toSpanStyle().copy(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append("Time: ")
+                            }
+                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                                append("${formatTimeWithAMPM(currentReservation.startTime)} - ${formatTimeWithAMPM(currentReservation.endTime)}")
+                            }
                         }
+                    )
 
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Price")
-                            Text("$${currentReservation.totalPrice}")
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = MaterialTheme.typography.titleMedium.toSpanStyle().copy(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append("Price: ")
+                            }
+                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                                append("$${currentReservation.totalPrice}")
+                            }
                         }
-                    }
+                    )
                 }
             }
         }
     }
 }
 
+private fun formatTimeWithAMPM(time: String): String {
+    // Handle time format with seconds (e.g., "15:00:00")
+    val parts = time.split(":")
+    if (parts.size < 2) return time
 
+    val hour = parts[0].toIntOrNull() ?: return time
+    val minute = parts[1]
 
+    val amPm = if (hour < 12) "AM" else "PM"
+    val hour12 = when {
+        hour == 0 -> 12
+        hour > 12 -> hour - 12
+        else -> hour
+    }
 
+    return "$hour12:$minute $amPm"
+}
 
+private fun formatFullDate(dateString: String): String {
+    try {
+        // Assuming dateString is in format "yyyy-MM-dd"
+        val dateParts = dateString.split("-")
+        if (dateParts.size != 3) return dateString
 
+        val year = dateParts[0].toIntOrNull() ?: return dateString
+        val month = dateParts[1].toIntOrNull() ?: return dateString
+        val day = dateParts[2].toIntOrNull() ?: return dateString
 
+        val date = LocalDate(year, month, day)
+        val dayOfWeek = getDayName(date.dayOfWeek)
+        val monthName = getMonthName(date.month)
 
+        return "$dayOfWeek, $monthName $day, $year"
+    } catch (e: Exception) {
+        return dateString
+    }
+}
 
+private fun getDayName(dayOfWeek: DayOfWeek): String {
+    return when (dayOfWeek) {
+        DayOfWeek.MONDAY -> "Monday"
+        DayOfWeek.TUESDAY -> "Tuesday"
+        DayOfWeek.WEDNESDAY -> "Wednesday"
+        DayOfWeek.THURSDAY -> "Thursday"
+        DayOfWeek.FRIDAY -> "Friday"
+        DayOfWeek.SATURDAY -> "Saturday"
+        DayOfWeek.SUNDAY -> "Sunday"
+        else -> "Unknown" // Add else branch for exhaustiveness
+    }
+}
 
-
-
+private fun getMonthName(month: Month): String {
+    return when (month) {
+        Month.JANUARY -> "January"
+        Month.FEBRUARY -> "February"
+        Month.MARCH -> "March"
+        Month.APRIL -> "April"
+        Month.MAY -> "May"
+        Month.JUNE -> "June"
+        Month.JULY -> "July"
+        Month.AUGUST -> "August"
+        Month.SEPTEMBER -> "September"
+        Month.OCTOBER -> "October"
+        Month.NOVEMBER -> "November"
+        Month.DECEMBER -> "December"
+        else -> "Unknown" // Add else branch for exhaustiveness
+    }
+}

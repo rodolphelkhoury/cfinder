@@ -17,6 +17,12 @@ data class Court(
     @SerialName("surface_type_id")
     val surfaceTypeId: Long,
 
+    @SerialName("court_type_name")
+    val courtType: String,
+
+    @SerialName("surface_type_name")
+    val surfaceType: String,
+
     @SerialName("name")
     val name: String,
 
@@ -40,9 +46,13 @@ data class Court(
 
     @SerialName("image_url")
     val imageUrl: String?,
-//    val sections: List<Section> = emptyList(),
-//    val complex: Complex,
-//    val courtType: CourtType,
-//    val surfaceType: SurfaceType,
-//    val reservations: List<Reservation> = emptyList()
+
+    @SerialName("longitude")
+    val longitude: Double,
+
+    @SerialName("latitude")
+    val latitude: Double,
+
+    @SerialName("address_line")
+    val addressLine: String?,
 )
