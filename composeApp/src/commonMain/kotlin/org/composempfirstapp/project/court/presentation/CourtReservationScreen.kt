@@ -44,6 +44,9 @@ fun CourtReservationScreen(
     val selectedTimeSlot = remember { mutableStateOf<TimeSlot?>(null) }
     val timeSlotsState by viewModel.availableTimeSlotsFlow.collectAsState()
     val reservationStatus by viewModel.reservationStatus.collectAsState()
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+
+
 
     val currentMonth = remember {
         mutableStateOf(Pair(now.year, now.monthNumber))
@@ -86,7 +89,6 @@ fun CourtReservationScreen(
         AlertDialog(
             onDismissRequest = {
                 showSuccessDialog = false
-                // Reset reservation status after showing success
                 viewModel.resetReservationStatus()
             },
             title = { Text("Reservation Successful") },
@@ -101,6 +103,47 @@ fun CourtReservationScreen(
                     }
                 ) {
                     Text("Okay")
+                }
+            }
+        )
+    }
+
+
+    // Confirmation dialog
+    if (showConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = { showConfirmationDialog = false },
+            title = { Text("Important Notice") },
+            text = {
+                Text(
+                    "This reservation cannot be canceled.",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showConfirmationDialog = false
+                        selectedTimeSlot.value?.let { timeSlot ->
+                            viewModel.createReservation(
+                                courtId = court.id,
+                                date = selectedDate.value.toString(),
+                                timeSlot = timeSlot
+                            )
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text("Reserve")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = { showConfirmationDialog = false }
+                ) {
+                    Text("Cancel")
                 }
             }
         )
@@ -126,6 +169,7 @@ fun CourtReservationScreen(
             confirmButton = { }
         )
     }
+
 
     Scaffold(
         topBar = {
@@ -406,15 +450,7 @@ fun CourtReservationScreen(
             }
 
             Button(
-                onClick = {
-                    selectedTimeSlot.value?.let { timeSlot ->
-                        viewModel.createReservation(
-                            courtId = court.id,
-                            date = selectedDate.value.toString(),
-                            timeSlot = timeSlot
-                        )
-                    }
-                },
+                onClick = { showConfirmationDialog = true },
                 enabled = selectedTimeSlot.value != null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -425,7 +461,7 @@ fun CourtReservationScreen(
         }
     }
 
-    // Add error handling for reservation errors
+    // Error handling dialog
     if (reservationStatus is Resource.Error) {
         val errorMessage = (reservationStatus as Resource.Error).message
         AlertDialog(
