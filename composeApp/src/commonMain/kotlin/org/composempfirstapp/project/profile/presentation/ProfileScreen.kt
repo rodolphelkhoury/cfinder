@@ -77,12 +77,12 @@ fun ProfileScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                ProfileNavigationItem(
-                    title = "My Courts",
-                    onClick = { rootNavController.navigate(ProfileRouteScreen.MyCourts.route) }
-                )
+//                Spacer(modifier = Modifier.height(12.dp))
+//
+//                ProfileNavigationItem(
+//                    title = "My Courts",
+//                    onClick = { rootNavController.navigate(ProfileRouteScreen.MyCourts.route) }
+//                )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
